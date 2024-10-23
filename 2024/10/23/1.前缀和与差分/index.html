@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Hello World | hainoir&#39;s blog</title>
+  <title>hainoir&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="1.prefix    前缀和数组 p[i] &#x3D; p[i-1] + a[i]; 优点：便于数组查找 2.diff   差分数组d[i] &#x3D; a[i] - a[i-1]; 优点：便于数组修改 3.二位前缀和p[i][j] &#x3D; p[i-1][j] + p[i][j-1] - p[i-1][j-1] + a[i][j]; 4.二维差分1.差分求法d[i][j] &#x3D; a[i][j] - a[i-1][j]">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2024/10/23/hello-world/index.html">
+<meta property="og:title" content="hainoir&#39;s blog">
+<meta property="og:url" content="http://example.com/2024/10/23/1.%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/index.html">
 <meta property="og:site_name" content="hainoir&#39;s blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="1.prefix    前缀和数组 p[i] &#x3D; p[i-1] + a[i]; 优点：便于数组查找 2.diff   差分数组d[i] &#x3D; a[i] - a[i-1]; 优点：便于数组修改 3.二位前缀和p[i][j] &#x3D; p[i-1][j] + p[i][j-1] - p[i-1][j-1] + a[i][j]; 4.二维差分1.差分求法d[i][j] &#x3D; a[i][j] - a[i-1][j]">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-10-23T08:49:01.298Z">
-<meta property="article:modified_time" content="2024-10-23T08:31:41.597Z">
+<meta property="article:published_time" content="2024-10-23T09:58:48.873Z">
+<meta property="article:modified_time" content="2024-10-08T13:48:21.683Z">
 <meta property="article:author" content="hainoir">
 <meta name="twitter:card" content="summary">
   
@@ -71,46 +71,36 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-1.前缀和与差分" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/10/23/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2024-10-23T08:49:01.298Z" itemprop="datePublished">2024-10-23</time>
+    <a href="/2024/10/23/1.%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/" class="article-date">
+  <time class="dt-published" datetime="2024-10-23T09:58:48.873Z" itemprop="datePublished">2024-10-23</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      Hello World
-    </h1>
-  
-
-      </header>
-    
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h2 id="1-prefix-前缀和数组"><a href="#1-prefix-前缀和数组" class="headerlink" title="1.prefix    前缀和数组"></a>1.prefix    前缀和数组</h2><p> <code>p[i] = p[i-1] + a[i];</code></p>
+<p>优点：便于数组查找</p>
+<h2 id="2-diff-差分数组"><a href="#2-diff-差分数组" class="headerlink" title="2.diff   差分数组"></a>2.diff   差分数组</h2><p><code>d[i] = a[i] - a[i-1];</code></p>
+<p>优点：便于数组修改</p>
+<h2 id="3-二位前缀和"><a href="#3-二位前缀和" class="headerlink" title="3.二位前缀和"></a>3.二位前缀和</h2><p><code>p[i][j] = p[i-1][j] + p[i][j-1] - p[i-1][j-1] + a[i][j];</code></p>
+<h2 id="4-二维差分"><a href="#4-二维差分" class="headerlink" title="4.二维差分"></a>4.二维差分</h2><h4 id="1-差分求法"><a href="#1-差分求法" class="headerlink" title="1.差分求法"></a>1.差分求法</h4><p><code>d[i][j] = a[i][j] - a[i-1][j] - a[i][j-1] + a[i-1][j-1]</code></p>
+<p>以上这个求法，是将原式作为所求差分的前缀和。</p>
+<h4 id="2-标准求法"><a href="#2-标准求法" class="headerlink" title="2.标准求法"></a>2.标准求法</h4><p><code>d[i][j] += a[i][j];   		</code></p>
+<p><code>d[i + 1][j] -= a[i][j];   		</code></p>
+<p><code>d[i][j + 1] -= a[i][j];   		</code></p>
+<p><code>		d[i + 1][j + 1] += a[i][j];</code></p>
+<p>两种求法一样，可以互相推导</p>
+<p>eg：<code>d[i + 1][j] -= a[i][j];   		</code>     &#x3D;     <code>d[i][j] -= a[i-1][j]</code></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/23/hello-world/" data-id="cm2lmvvx70000cwlxg5it3tn2" data-title="Hello World" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="http://example.com/2024/10/23/1.%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/" data-id="cm2lpcqhv0001i4lx48nz0gkp" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -120,7 +110,7 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/10/23/2.%E4%BD%8D%E8%BF%90%E7%AE%97%E5%8F%8C%E6%8C%87%E9%92%88%E6%8E%92%E5%BA%8F%E4%BA%8C%E5%88%86/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/10/23/1.%E5%88%9B%E5%BB%BAvite%E9%A1%B9%E7%9B%AE/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
@@ -129,6 +119,11 @@
       </div>
     </a>
   
+  
+    <a href="/2024/10/23/C++%E4%B8%AD%E5%90%84%E7%B1%BB%E5%87%BD%E6%95%B0%E7%9A%84%E7%94%A8%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title"></div>
+    </a>
   
 </nav>
 

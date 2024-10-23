@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>hainoir&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="2.位运算双指针排序二分1.位运算​			与：&amp; ​			或：| ​			非：！ ​			异或：^    	（任何数，与0进行异或都等于0）eg:【a + b &#x3D; 2（a &amp; b）+ (a ^ b)】 ​			移位：&lt;&lt; (左移)，&gt;&gt;(右移)    ​			取反：~ 12bitset&lt;n&gt;(x)   &#x2F;&#x2F;将x转换为n进制x &lt;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hainoir&#39;s blog">
+<meta property="og:url" content="http://example.com/2024/10/23/2.%E4%BD%8D%E8%BF%90%E7%AE%97%E5%8F%8C%E6%8C%87%E9%92%88%E6%8E%92%E5%BA%8F%E4%BA%8C%E5%88%86/index.html">
+<meta property="og:site_name" content="hainoir&#39;s blog">
+<meta property="og:description" content="2.位运算双指针排序二分1.位运算​			与：&amp; ​			或：| ​			非：！ ​			异或：^    	（任何数，与0进行异或都等于0）eg:【a + b &#x3D; 2（a &amp; b）+ (a ^ b)】 ​			移位：&lt;&lt; (左移)，&gt;&gt;(右移)    ​			取反：~ 12bitset&lt;n&gt;(x)   &#x2F;&#x2F;将x转换为n进制x &lt;&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-23T09:58:48.873Z">
+<meta property="article:modified_time" content="2024-10-23T07:35:12.985Z">
+<meta property="article:author" content="hainoir">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="hainoir's blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">hainoir&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2.位运算双指针排序二分" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/23/2.%E4%BD%8D%E8%BF%90%E7%AE%97%E5%8F%8C%E6%8C%87%E9%92%88%E6%8E%92%E5%BA%8F%E4%BA%8C%E5%88%86/" class="article-date">
+  <time class="dt-published" datetime="2024-10-23T09:58:48.873Z" itemprop="datePublished">2024-10-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="2-位运算双指针排序二分"><a href="#2-位运算双指针排序二分" class="headerlink" title="2.位运算双指针排序二分"></a>2.位运算双指针排序二分</h1><h3 id="1-位运算"><a href="#1-位运算" class="headerlink" title="1.位运算"></a>1.位运算</h3><p>​			与：&amp;</p>
+<p>​			或：|</p>
+<p>​			非：！</p>
+<p>​			异或：^    	<!--无分配律，有交换律和结合律-->（任何数，与0进行异或都等于0）eg:【a + b &#x3D; 2（a &amp; b）+ (a ^ b)】</p>
+<p>​			移位：&lt;&lt; (左移)，&gt;&gt;(右移)   <!--高位溢出--></p>
+<p>​			取反：~</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bitset&lt;n&gt;(x)   //将x转换为n进制</span><br><span class="line">x &lt;&lt;= 1 	   //将x左移一位</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-排序"><a href="#2-排序" class="headerlink" title="2.排序"></a>2.排序</h3><p>数组去重排序模板：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; a;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>;i &lt;= n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> num;cin &gt;&gt; num;</span><br><span class="line">		a.<span class="built_in">push_back</span>(num); 							<span class="comment">//push_back,是vector数组的方法，且vector会自动更新长度</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="built_in">sort</span>(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>()); 							<span class="comment">//从小到大排序</span></span><br><span class="line">a.<span class="built_in">erase</span>(<span class="built_in">unique</span>(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>()),a.<span class="built_in">end</span>()); 		<span class="comment">//unique作用：(将a里的重复元素放到末尾并返回最后有效元素的下一位)</span></span><br><span class="line">													<span class="comment">//erase作用： (将传入两个参数所含的部分清除掉)</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">auto</span> &amp;i : a) cout &lt;&lt; i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;    				<span class="comment">//以i为索引遍历每一个数组a的元素，并将其输出</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">reverse</span>(a + <span class="number">1</span>,a + <span class="number">1</span> + n); 							<span class="comment">//翻转a数组中的元素</span></span><br></pre></td></tr></table></figure>
+
+<p>遇见一个元素中有多个数据，且需要排列不同元素时，就需要使用cmp或struct；</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">book</span>&#123;                                        <span class="comment">//结构体</span></span><br><span class="line">	<span class="type">int</span> a,b,c;</span><br><span class="line">	<span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> book &amp;u)<span class="type">const</span>&#123;			<span class="comment">//重载运算符</span></span><br><span class="line">		<span class="keyword">if</span>(u.a == a &amp;&amp; u.b == b) <span class="keyword">return</span> u.c &lt; c;</span><br><span class="line">		<span class="keyword">if</span>(u.a == a) <span class="keyword">return</span> u.b &lt; b;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> u.a &lt; a;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;p[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(<span class="type">const</span> book &amp;u,<span class="type">const</span> book &amp;v)</span></span>&#123;				<span class="comment">//cmp函数，用在sort(a.begin(),a.end(),cmp)</span></span><br><span class="line">	<span class="keyword">if</span>(u.a == v.a &amp;&amp; u.b == v.b) <span class="keyword">return</span> u.c &gt; v.c;</span><br><span class="line">	<span class="keyword">if</span>(u.a == v.a) <span class="keyword">return</span> u.b &gt; v.b;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> u.a &gt; v.a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="3-双指针"><a href="#3-双指针" class="headerlink" title="3.双指针"></a>3.双指针</h3><p>​     1.只往一个方向走</p>
+<p>​	 2.一快一慢</p>
+<p>​	 3.在区间内</p>
+<h3 id="4-二分"><a href="#4-二分" class="headerlink" title="4.二分"></a>4.二分</h3><p>​	</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/23/2.%E4%BD%8D%E8%BF%90%E7%AE%97%E5%8F%8C%E6%8C%87%E9%92%88%E6%8E%92%E5%BA%8F%E4%BA%8C%E5%88%86/" data-id="cm2lpcqhx0005i4lx8cv12sko" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/10/23/C++%E4%B8%AD%E5%90%84%E7%B1%BB%E5%87%BD%E6%95%B0%E7%9A%84%E7%94%A8%E6%B3%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/10/23/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/10/23/Java%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/vue%20%E4%B8%AD%20ref%E5%92%8Creactive/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/1.%E5%88%9B%E5%BB%BAvite%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/1.%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/C++%E4%B8%AD%E5%90%84%E7%B1%BB%E5%87%BD%E6%95%B0%E7%9A%84%E7%94%A8%E6%B3%95/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 hainoir<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
