@@ -1,11 +1,13 @@
 ---
 title: Java字符串方法
-date: 2026-02-05 16:22:31
 tags:
-- Java
-- 算法
+  - Java
+  - 算法
 categories:
-- [Java, 算法]
+  - - Java
+    - 算法
+abbrlink: b324aa57
+date: 2026-02-05 16:22:31
 ---
 
 # Java字符串方法

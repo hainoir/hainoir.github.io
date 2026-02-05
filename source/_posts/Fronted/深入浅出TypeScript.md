@@ -1,11 +1,12 @@
 ---
 title: 深入浅出TypeScript
-date: 2026-02-05 16:22:41
 tags:
-- TypeScript
-- 前端
+  - TypeScript
+  - 前端
 categories:
-- [前端]
+  - - 前端
+abbrlink: e86ee304
+date: 2026-02-05 16:22:41
 ---
 
 # 深入浅出TypeScript

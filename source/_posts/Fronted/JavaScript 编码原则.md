@@ -1,11 +1,12 @@
 ---
 title: JavaScript 编码原则
-date: 2026-02-05 16:22:41
 tags:
-- JavaScript
-- 前端
+  - JavaScript
+  - 前端
 categories:
-- [前端]
+  - - 前端
+abbrlink: bea3b2c9
+date: 2026-02-05 16:22:41
 ---
 
 # JavaScript 编码原则

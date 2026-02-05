@@ -1,11 +1,13 @@
 ---
 title: java算法
-date: 2026-02-05 16:22:31
 tags:
-- Java
-- 算法
+  - Java
+  - 算法
 categories:
-- [Java, 算法]
+  - - Java
+    - 算法
+abbrlink: 2f8a531c
+date: 2026-02-05 16:22:31
 ---
 
 1.最大公约数gcd

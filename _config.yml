@@ -10,12 +10,12 @@ keywords: 前端，算法，React，TypeScript，Vue，Node.js，Hexo
 author: hainoir
 language: zh-CN
 url: https://hainoir.github.io
-timezone: 'GMT+8'
+timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
-permalink: :year/:month/:day/:title/
+# url: http://example.com
+# permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
