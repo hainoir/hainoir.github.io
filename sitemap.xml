@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hainoir.github.io/about/index.html</loc>
+    
+    <lastmod>2026-02-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://hainoir.github.io/posts/b74716b.html</loc>
     
     <lastmod>2026-02-05</lastmod>
@@ -165,6 +174,13 @@
   </url>
   
   <url>
+    <loc>https://hainoir.github.io/tags/React/</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://hainoir.github.io/tags/C/</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -173,13 +189,6 @@
   
   <url>
     <loc>https://hainoir.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2026-02-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://hainoir.github.io/tags/React/</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
