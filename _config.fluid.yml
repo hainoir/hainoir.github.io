@@ -4,12 +4,13 @@
 
 # Site
 title: hainoir的blog
-subtitle: ''
-description: ''
-keywords:
+subtitle: '分享前端与算法知识'
+description: '记录前端学习、项目实践、和技术成长。专注于React、TypeScript、算法。'
+keywords: 前端，算法，React，TypeScript，Vue，Node.js，Hexo
 author: hainoir
 language: zh-CN
-timezone: ''
+url: https://hainoir.github.io
+timezone: 'GMT+8'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
@@ -124,3 +125,30 @@ index:
 # navbar
 navbar:
   blog_title: hainoir的blog
+
+#Seo
+permalink: posts/:abbrlink.html
+
+abbrlink:
+  alg: crc32  # 算法
+  rep: hex    # 进制
+
+# Sitemap
+sitemap:
+  path: sitemap.xml
+
+# 百度 Sitemap
+baidusitemap:
+  path: baidusitemap.xml
+
+# Canonical
+canonical:
+  enable: true
+
+# Open Graph
+open_graph:
+  enable: true
+  twitter_card: summary_large_image
+
+# Force HTTPS
+force_https: true

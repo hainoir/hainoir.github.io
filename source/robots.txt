@@ -1,0 +1,11 @@
+# /source/robots.txt
+
+User-agent: *
+Allow: /
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /img/
+
+Sitemap: https://hainoir.github.io/sitemap.xml
+Sitemap: https://hainoir.github.io/baidusitemap.xml
