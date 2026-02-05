@@ -105,6 +105,7 @@ deploy:
   repository: https://github.com/hainoir/hainoir.github.io.git
   branch: main
 
+## My Config
 #Slogan
 index:
   slogan:
@@ -116,3 +117,10 @@ index:
       method: "GET"
       headers: {}
       keys: ["hitokoto"]
+
+#index:
+  post_url_target: _blank
+
+# navbar
+navbar:
+  blog_title: hainoir的blog
