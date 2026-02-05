@@ -11,23 +11,27 @@
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/fluid.png">
   
+    <link rel="canonical" href="https://hainoir.github.io/posts/b324aa57.html"/>
+  
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="hainoir">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="前端，算法，React，TypeScript，Vue，Node.js，Hexo">
   
-    <meta name="description" content="1.最大公约数gcd 1234public static int gcd(int x,int y)&#123;    return y&#x3D;&#x3D;0?x:gcd(y,x%y);&#125;  2.最小公倍数lcm 1234public static int lcm(int a, int b) &#123;        return a &#x2F; gcd(a, b)*b;&#125;  3.素数 1234567">
+    <meta name="description" content="Java字符串方法1.equals eg： 12345String name &#x3D; &quot;Bro&quot;;boolean res &#x3D; name.equals(&quot;Bro&quot;);System.out.println(res);  equal可以比较两个字符串是否相同，得到的结果是布尔值，即true or false。 2.length    得到字符串长度 3.charAt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java算法">
-<meta property="og:url" content="http://example.com/2026/02/05/algorithms/java%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="Java字符串方法">
+<meta property="og:url" content="https://hainoir.github.io/posts/b324aa57.html">
 <meta property="og:site_name" content="hainoir的blog">
-<meta property="og:description" content="1.最大公约数gcd 1234public static int gcd(int x,int y)&#123;    return y&#x3D;&#x3D;0?x:gcd(y,x%y);&#125;  2.最小公倍数lcm 1234public static int lcm(int a, int b) &#123;        return a &#x2F; gcd(a, b)*b;&#125;  3.素数 1234567">
+<meta property="og:description" content="Java字符串方法1.equals eg： 12345String name &#x3D; &quot;Bro&quot;;boolean res &#x3D; name.equals(&quot;Bro&quot;);System.out.println(res);  equal可以比较两个字符串是否相同，得到的结果是布尔值，即true or false。 2.length    得到字符串长度 3.charAt">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-02-05T08:22:31.000Z">
-<meta property="article:modified_time" content="2026-02-05T08:41:16.011Z">
+<meta property="article:modified_time" content="2026-02-05T09:21:43.619Z">
 <meta property="article:author" content="hainoir">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="Java">
@@ -35,7 +39,7 @@
   
   
   
-  <title>java算法 - hainoir的blog</title>
+  <title>Java字符串方法 - hainoir的blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -73,7 +77,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"hainoir.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -201,7 +205,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="java算法"></span>
+            <span id="subtitle" data-typed-text="Java字符串方法"></span>
           
         </div>
 
@@ -224,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          115 字
+          210 字
         
       </span>
     
@@ -235,7 +239,7 @@
         
         
         
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -272,25 +276,46 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">java算法</h1>
+            <h1 id="seo-header">Java字符串方法</h1>
             
             
               <div class="markdown-body">
                 
-                <p>1.最大公约数gcd</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">gcd</span><span class="hljs-params">(<span class="hljs-type">int</span> x,<span class="hljs-type">int</span> y)</span><br>&#123;<br>    <span class="hljs-keyword">return</span> y==<span class="hljs-number">0</span>?x:gcd(y,x%y);<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="Java字符串方法"><a href="#Java字符串方法" class="headerlink" title="Java字符串方法"></a>Java字符串方法</h1><p>1.equals</p>
+<p>eg：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Bro&quot;</span>;<br><br><span class="hljs-type">boolean</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.equals(<span class="hljs-string">&quot;Bro&quot;</span>);<br><br>System.out.println(res);<br></code></pre></td></tr></table></figure>
 
-<p>2.最小公倍数lcm</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">lcm</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> <br>&#123;<br>        <span class="hljs-keyword">return</span> a / gcd(a, b)*b;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>equal可以比较两个字符串是否相同，得到的结果是布尔值，即true or false。</p>
+<p>2.length</p>
+<p>   得到字符串长度</p>
+<p>3.charAt</p>
+<p>eg:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hainoir&quot;</span>;<br><br><span class="hljs-type">char</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.charAt(<span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
 
-<p>3.素数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isPrime2</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> &#123;<br>	<span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">3</span>) &#123;<br>		<span class="hljs-keyword">return</span> n &gt; <span class="hljs-number">1</span>;<br>	&#125;<br>	<span class="hljs-type">int</span> <span class="hljs-variable">sqrt</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) Math.sqrt(n);<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>; i &lt;= sqrt; i++) &#123;<br>		<span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>) &#123;<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可得到对应参数的字符，结果是h</p>
+<p>4.indexOf</p>
+<p>eg:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hainoir&quot;</span>;<br><br><span class="hljs-type">int</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.indexOf(h);<br></code></pre></td></tr></table></figure>
 
-<p>4.素数筛（预处理素数）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;i &lt; v.length;++i) <br>		&#123;<br>			<span class="hljs-keyword">if</span>(v[i] == <span class="hljs-number">0</span>) <br>			&#123;<br>				list.add(i);<br>				<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i * i;j &lt; v.length;j+=i) <br>				&#123;<br>					v[j] = <span class="hljs-number">1</span>;<br>				&#125;<br>			&#125;<br>		&#125;<br></code></pre></td></tr></table></figure>
+<p>可以得到参数字符的位置，结果是0；</p>
+<p>5.isEmpty</p>
+<p>eg: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br><br><span class="hljs-type">boolean</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.isEmpty();<br></code></pre></td></tr></table></figure>
 
+<p>可以判断字符串是否为空，结果类型是布尔值，得到true；</p>
+<p>6.toUpperCase  </p>
+<p>eg：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hainoir&quot;</span>;<br><br><span class="hljs-type">String</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.toUpperCase();<br></code></pre></td></tr></table></figure>
 
+<p>可以将字符串全部变为大写，即HAINOIR</p>
+<p>小写用toLowerCase();</p>
+<p>7.trim</p>
+<p>将删除字符串中的所有空格</p>
+<p>8.replace</p>
+<p>eg：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hainoir&quot;</span>;<br><br><span class="hljs-type">String</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> name.replace(<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>);<br></code></pre></td></tr></table></figure>
 
+<p>replace 中的两个参数，将第一个全部替换为第二个，故结果为hainair；</p>
 
                 
               </div>
@@ -345,8 +370,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>java算法</div>
-      <div>http://example.com/2026/02/05/algorithms/java算法/</div>
+      <div>Java字符串方法</div>
+      <div>https://hainoir.github.io/posts/b324aa57.html</div>
     </div>
     <div class="license-meta">
       
@@ -390,9 +415,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/02/05/algorithms/6.%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F%EF%BC%8CDFS%EF%BC%8CBFS/" title="6.图的存储方式，DFS，BFS">
+                      <a href="/posts/2f8a531c.html" title="java算法">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">6.图的存储方式，DFS，BFS</span>
+                        <span class="hidden-mobile">java算法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -400,7 +425,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/02/05/algorithms/%E5%B8%B8%E8%A7%81%E7%9A%84%E7%AE%97%E6%B3%95/" title="常见的算法">
+                      <a href="/posts/b74716b.html" title="常见的算法">
                         <span class="hidden-mobile">常见的算法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
