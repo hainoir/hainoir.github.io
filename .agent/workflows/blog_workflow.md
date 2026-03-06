@@ -51,3 +51,20 @@ npx hexo deploy
 
 > [!NOTE]
 > `hexo deploy` 已配置为将生成的静态网站自动推送到您 GitHub 仓库的 `main` 分支。
+
+
+---
+title: 6.图的存储方式，DFS，BFS
+tags:
+  - C++
+  - 算法
+categories:
+  - - C++
+    - 算法
+abbrlink: a72304e1
+index_img: /img/默认缩略图.jpg
+excerpt: 自动生成的摘要文字，请在此修改为您的归纳段落...
+description: 
+keywords: 
+date: 2026-02-05 16:22:31
+---
