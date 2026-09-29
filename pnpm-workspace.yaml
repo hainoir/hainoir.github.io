@@ -1,7 +1,9 @@
 allowBuilds:
+  '@parcel/watcher': true
   ejs: false
   esbuild: true
   fsevents: false
   hexo-util: false
   highlight.js: false
   sharp: true
+  swup: true
