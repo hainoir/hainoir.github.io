@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { byNewest, formatDate, getCategories, getPostUrl, getPrimaryCategory, toIsoDate } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return getCategories(posts).map((category) => ({ params: { category }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const posts = (await getCollection('posts'))
+  .filter((post) => getPrimaryCategory(post) === category)
+  .sort(byNewest);
+---
+
+<BaseLayout title={category} description={`${category}分类下的技术文章。`}>
+  <header class="page-intro page-width">
+    <p class="eyebrow">CATEGORY</p>
+    <h1>{category}</h1>
+    <p>共 {posts.length} 篇文章。</p>
+  </header>
+  <section class="list-layout page-width" aria-label={`${category}分类文章`}>
+    <ol class="archive-list">
+      {posts.map((post) => (
+        <li class="archive-row">
+          <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+          <a href={getPostUrl(post)}>{post.data.title}</a>
+          <span>{post.data.tags.at(0)}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>

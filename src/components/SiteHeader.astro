@@ -1,0 +1,68 @@
+---
+import { GithubIcon, Moon, Sun } from '@lucide/astro';
+
+const path = Astro.url.pathname;
+const items = [
+  { href: '/', label: '文章' },
+  { href: '/archives/', label: '归档' },
+  { href: '/categories/', label: '分类' },
+  { href: '/tags/', label: '标签' },
+  { href: '/about/', label: '关于' },
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="hainoir 的博客首页">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <span>hainoir</span>
+    </a>
+
+    <nav aria-label="主导航">
+      <ul class="nav-list" role="list">
+        {items.map((item) => (
+          <li>
+            <a href={item.href} aria-current={path === item.href || (item.href !== '/' && path.startsWith(item.href)) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="icon-button" href="https://github.com/hainoir" aria-label="访问 hainoir 的 GitHub">
+        <GithubIcon size={18} aria-hidden="true" />
+      </a>
+      <button class="icon-button theme-toggle" type="button" aria-label="切换明暗主题" aria-pressed="false">
+        <Sun class="theme-icon-light" size={18} aria-hidden="true" />
+        <Moon class="theme-icon-dark" size={18} aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  const button = document.querySelector('.theme-toggle');
+  const meta = document.querySelector('meta[name="color-scheme"]');
+
+  const getActiveScheme = () => meta?.getAttribute('content') === 'dark' ||
+    (meta?.getAttribute('content') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
+      ? 'dark'
+      : 'light';
+
+  const updateButton = () => {
+    button?.setAttribute('aria-pressed', String(getActiveScheme() === 'dark'));
+  };
+
+  button?.addEventListener('click', () => {
+    const next = getActiveScheme() === 'dark' ? 'light' : 'dark';
+    meta?.setAttribute('content', next);
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next;
+    localStorage.setItem('color-scheme', next);
+    updateButton();
+  });
+
+  updateButton();
+</script>

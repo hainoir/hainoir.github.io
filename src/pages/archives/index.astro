@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { byNewest, formatDate, getPostUrl, getPrimaryCategory, toIsoDate } from '../../lib/content';
+
+const posts = (await getCollection('posts')).sort(byNewest);
+---
+
+<BaseLayout title="归档" description="按时间查看 hainoir 的全部技术文章。">
+  <header class="page-intro page-width">
+    <p class="eyebrow">ARCHIVE</p>
+    <h1>全部文章</h1>
+    <p>{posts.length} 篇笔记，按最近更新时间排列。</p>
+  </header>
+  <section class="list-layout page-width" aria-label="文章归档">
+    <ol class="archive-list">
+      {posts.map((post) => (
+        <li class="archive-row">
+          <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+          <a href={getPostUrl(post)}>{post.data.title}</a>
+          <span>{getPrimaryCategory(post)}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>

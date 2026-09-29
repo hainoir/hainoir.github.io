@@ -1,0 +1,29 @@
+---
+import { ArrowUpRight } from '@lucide/astro';
+import type { Post } from '../lib/content';
+import { formatDate, getExcerpt, getPostUrl, getPrimaryCategory, toIsoDate } from '../lib/content';
+
+interface Props {
+  post: Post;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+---
+
+<article class:list={['post-card', { featured }]}>
+  <div class="post-card-meta">
+    <a class="category-link" href={`/categories/${encodeURIComponent(getPrimaryCategory(post))}/`}>{getPrimaryCategory(post)}</a>
+    <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+  </div>
+  <h2><a href={getPostUrl(post)}>{post.data.title}</a></h2>
+  <p>{getExcerpt(post)}</p>
+  <div class="post-card-footer">
+    <ul class="tag-list" role="list">
+      {post.data.tags.slice(0, 3).map((tag) => <li><a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a></li>)}
+    </ul>
+    <a class="read-link" href={getPostUrl(post)} aria-label={`阅读《${post.data.title}》`}>
+      阅读 <ArrowUpRight size={16} aria-hidden="true" />
+    </a>
+  </div>
+</article>

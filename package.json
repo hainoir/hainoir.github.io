@@ -2,16 +2,26 @@
   "name": "hexo-site",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server"
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "build:hexo": "hexo generate",
+    "clean:hexo": "hexo clean",
+    "deploy:hexo": "hexo deploy",
+    "server:hexo": "hexo server"
   },
   "hexo": {
     "version": "7.3.0"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.6.0",
+    "@lucide/astro": "^0.544.0",
+    "astro": "^5.13.10",
     "hexo": "^7.3.0",
     "hexo-abbrlink": "^2.2.1",
     "hexo-deployer-git": "^4.0.0",
@@ -27,5 +37,9 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-fluid": "^1.9.8",
     "hexo-theme-landscape": "^1.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.2"
   }
 }

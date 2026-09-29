@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTags } from '../../lib/content';
+
+const posts = await getCollection('posts');
+const tags = getTags(posts).map((name) => ({
+  name,
+  count: posts.filter((post) => post.data.tags.includes(name)).length,
+}));
+---
+
+<BaseLayout title="标签" description="按主题标签浏览 hainoir 的技术文章。">
+  <header class="page-intro page-width">
+    <p class="eyebrow">TAGS</p>
+    <h1>主题标签</h1>
+    <p>从具体语言、框架或问题类型进入。</p>
+  </header>
+  <section class="list-layout page-width" aria-label="文章标签">
+    <div class="term-grid">
+      {tags.map((tag) => (
+        <a class="term-link" href={`/tags/${encodeURIComponent(tag.name)}/`}>
+          <strong>#{tag.name}</strong>
+          <span>{tag.count} 篇文章</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

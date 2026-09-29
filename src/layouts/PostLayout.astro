@@ -1,0 +1,36 @@
+---
+import { ArrowLeft, CalendarDays, Clock3 } from '@lucide/astro';
+import BaseLayout from './BaseLayout.astro';
+import type { Post } from '../lib/content';
+import { formatDate, getExcerpt, getPrimaryCategory, getReadingMinutes, toIsoDate } from '../lib/content';
+
+interface Props { post: Post }
+const { post } = Astro.props;
+const category = getPrimaryCategory(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description || getExcerpt(post, 155)} image={post.data.banner_img || post.data.index_img} type="article" canonicalPath={`/posts/${post.data.abbrlink}.html`}>
+  <article class="article-shell">
+    <header class="article-header page-width">
+      <a class="back-link" href="/"><ArrowLeft size={17} aria-hidden="true" /> 返回文章</a>
+      <a class="article-category" href={`/categories/${encodeURIComponent(category)}/`}>{category}</a>
+      <h1>{post.data.title}</h1>
+      <div class="article-meta">
+        <span><CalendarDays size={16} aria-hidden="true" /><time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time></span>
+        <span><Clock3 size={16} aria-hidden="true" />约 {getReadingMinutes(post)} 分钟</span>
+      </div>
+    </header>
+
+    <div class="article-grid page-width">
+      <div class="prose">
+        <slot />
+      </div>
+      <aside class="article-aside" aria-label="文章信息">
+        <p class="aside-label">主题</p>
+        <ul class="aside-tags" role="list">
+          {post.data.tags.map((tag) => <li><a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a></li>)}
+        </ul>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  canonicalPath?: string;
+}
+
+const {
+  title,
+  description = '记录前端学习、项目实践与算法思考。',
+  image = '/img/coding.webp',
+  type = 'website',
+  canonicalPath,
+} = Astro.props;
+const siteName = 'hainoir 的博客';
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const canonical = new URL(canonicalPath || Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      const savedScheme = localStorage.getItem('color-scheme');
+      if (savedScheme === 'light' || savedScheme === 'dark') {
+        document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', savedScheme);
+        document.documentElement.dataset.theme = savedScheme;
+        document.documentElement.style.colorScheme = savedScheme;
+      }
+    </script>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b6b5f" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <SiteHeader />
+    <main id="content" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

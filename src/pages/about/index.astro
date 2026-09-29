@@ -1,0 +1,26 @@
+---
+import { GithubIcon, Rss } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="关于" description="关于 hainoir 和这个技术博客。">
+  <header class="page-intro page-width">
+    <p class="eyebrow">ABOUT</p>
+    <h1>关于我</h1>
+    <p>在代码、问题和持续记录之间，建立自己的知识坐标。</p>
+  </header>
+  <section class="content-band page-width about-grid">
+    <div class="about-copy">
+      <h2>你好，我是 hainoir。</h2>
+      <p>我关注前端开发与算法，也把学习过程中的推演、实践和踩坑整理在这里。</p>
+      <p>这些文章不是追求完整答案的教程仓库，而是可以继续修订的个人技术笔记。希望它们既能帮助未来的自己，也能为遇到相似问题的人提供一点线索。</p>
+      <div class="hero-links">
+        <a class="button-link primary" href="https://github.com/hainoir"><GithubIcon size={17} aria-hidden="true" /> GitHub</a>
+        <a class="button-link" href="/rss.xml"><Rss size={17} aria-hidden="true" /> RSS</a>
+      </div>
+    </div>
+    <aside class="about-note" aria-label="博客方向">
+      <p><strong>当前主题</strong><br />React、TypeScript、JavaScript、C++ 与算法基础。</p>
+    </aside>
+  </section>
+</BaseLayout>

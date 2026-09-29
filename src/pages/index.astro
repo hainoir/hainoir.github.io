@@ -1,0 +1,39 @@
+---
+import { ArrowDown, GithubIcon } from '@lucide/astro';
+import { getCollection } from 'astro:content';
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { byNewest } from '../lib/content';
+
+const posts = (await getCollection('posts')).sort(byNewest);
+const latestPosts = posts.slice(0, 7);
+---
+
+<BaseLayout>
+  <section class="hero" aria-labelledby="hero-title">
+    <img class="hero-image" src="/img/coding.webp" width="1920" height="1080" alt="" fetchpriority="high" />
+    <div class="hero-content">
+      <p class="eyebrow">FRONTEND · ALGORITHMS · NOTES</p>
+      <h1 id="hero-title">hainoir</h1>
+      <p class="hero-copy">把前端实践、算法推演和那些值得反复理解的问题，整理成可以随时返回的技术笔记。</p>
+      <div class="hero-links">
+        <a class="button-link primary" href="#latest">阅读文章 <ArrowDown size={17} aria-hidden="true" /></a>
+        <a class="button-link" href="https://github.com/hainoir">GitHub <GithubIcon size={17} aria-hidden="true" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-band page-width" id="latest" aria-labelledby="latest-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">LATEST NOTES</p>
+        <h2 id="latest-title">最近文章</h2>
+        <p>持续整理正在学习和使用的技术，而不是追赶短暂的热度。</p>
+      </div>
+      <a href="/archives/">查看全部 {posts.length} 篇</a>
+    </div>
+    <div class="post-grid">
+      {latestPosts.map((post, index) => <PostCard post={post} featured={index === 0} />)}
+    </div>
+  </section>
+</BaseLayout>
