@@ -1,6 +1,7 @@
 ---
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import ProfileCard from '../components/ProfileCard.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -53,9 +54,16 @@ const socialImage = new URL(image, Astro.site);
   <body>
     <a class="skip-link" href="#content">跳到正文</a>
     <SiteHeader />
-    <main id="content" tabindex="-1">
-      <slot />
-    </main>
-    <SiteFooter />
+    <div class="site-layout">
+      <aside class="site-sidebar" aria-label="个人信息">
+        <ProfileCard />
+      </aside>
+      <div class="site-main">
+        <main id="content" tabindex="-1">
+          <slot />
+        </main>
+        <SiteFooter />
+      </div>
+    </div>
   </body>
 </html>

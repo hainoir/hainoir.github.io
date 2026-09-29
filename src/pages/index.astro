@@ -1,5 +1,5 @@
 ---
-import { ArrowDown, GithubIcon } from '@lucide/astro';
+import { ArrowDown } from '@lucide/astro';
 import { getCollection } from 'astro:content';
 import PostCard from '../components/PostCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -10,17 +10,11 @@ const latestPosts = posts.slice(0, 7);
 ---
 
 <BaseLayout>
-  <section class="hero" aria-labelledby="hero-title">
-    <img class="hero-image" src="/img/coding.webp" width="1920" height="1080" alt="" fetchpriority="high" />
-    <div class="hero-content">
-      <p class="eyebrow">FRONTEND · ALGORITHMS · NOTES</p>
-      <h1 id="hero-title">hainoir</h1>
-      <p class="hero-copy">把前端实践、算法推演和那些值得反复理解的问题，整理成可以随时返回的技术笔记。</p>
-      <div class="hero-links">
-        <a class="button-link primary" href="#latest">阅读文章 <ArrowDown size={17} aria-hidden="true" /></a>
-        <a class="button-link" href="https://github.com/hainoir">GitHub <GithubIcon size={17} aria-hidden="true" /></a>
-      </div>
-    </div>
+  <section class="home-intro" aria-labelledby="hero-title">
+    <p class="eyebrow">FRONTEND · ALGORITHMS · NOTES</p>
+    <h1 id="hero-title">把问题想清楚，再写下来。</h1>
+    <p class="hero-copy">这里记录前端实践、算法推演和那些值得反复理解的问题。</p>
+    <a class="button-link primary" href="#latest">开始阅读 <ArrowDown size={17} aria-hidden="true" /></a>
   </section>
 
   <section class="content-band page-width" id="latest" aria-labelledby="latest-title">

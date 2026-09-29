@@ -1,0 +1,19 @@
+---
+import { Github, Rss } from '@lucide/astro';
+---
+
+<section class="profile-card">
+  <div class="profile-avatar" aria-hidden="true">H</div>
+  <h2>hainoir</h2>
+  <p>前端开发、算法与长期主义的技术笔记。</p>
+  <div class="profile-links">
+    <a class="profile-link" href="https://github.com/hainoir" aria-label="访问 GitHub">
+      <Github size={17} aria-hidden="true" /> GitHub
+    </a>
+    <a class="profile-link" href="/rss.xml" aria-label="订阅 RSS">
+      <Rss size={17} aria-hidden="true" /> RSS
+    </a>
+  </div>
+  <div class="profile-rule" aria-hidden="true"></div>
+  <p class="profile-note">把复杂问题拆开，留下可复用的理解。</p>
+</section>

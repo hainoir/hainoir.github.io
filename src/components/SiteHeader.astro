@@ -1,5 +1,5 @@
 ---
-import { GithubIcon, Moon, Sun } from '@lucide/astro';
+import { Menu, Moon, Sun, X } from '@lucide/astro';
 
 const path = Astro.url.pathname;
 const items = [
@@ -15,7 +15,7 @@ const items = [
   <div class="header-inner">
     <a class="brand" href="/" aria-label="hainoir 的博客首页">
       <span class="brand-mark" aria-hidden="true">H</span>
-      <span>hainoir</span>
+      <span>HAINoir</span>
     </a>
 
     <nav aria-label="主导航">
@@ -31,12 +31,13 @@ const items = [
     </nav>
 
     <div class="header-actions">
-      <a class="icon-button" href="https://github.com/hainoir" aria-label="访问 hainoir 的 GitHub">
-        <GithubIcon size={18} aria-hidden="true" />
-      </a>
       <button class="icon-button theme-toggle" type="button" aria-label="切换明暗主题" aria-pressed="false">
         <Sun class="theme-icon-light" size={18} aria-hidden="true" />
         <Moon class="theme-icon-dark" size={18} aria-hidden="true" />
+      </button>
+      <button class="icon-button nav-toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+        <Menu class="menu-icon" size={19} aria-hidden="true" />
+        <X class="close-icon" size={19} aria-hidden="true" />
       </button>
     </div>
   </div>
@@ -65,4 +66,12 @@ const items = [
   });
 
   updateButton();
+
+  const navToggle = document.querySelector('.nav-toggle');
+  const header = document.querySelector('.site-header');
+  navToggle?.addEventListener('click', () => {
+    header?.toggleAttribute('data-menu-open');
+    const open = header?.hasAttribute('data-menu-open');
+    navToggle.setAttribute('aria-expanded', String(Boolean(open)));
+  });
 </script>
