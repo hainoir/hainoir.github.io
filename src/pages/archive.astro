@@ -1,14 +1,24 @@
 ---
-import ArchivePanel from "@components/ArchivePanel.svelte";
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
-import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPostsList } from "../utils/content-utils";
-
-const sortedPostsList = await getSortedPostsList();
 ---
-
-<MainGridLayout title={i18n(I18nKey.archive)}>
-    <ArchivePanel sortedPosts={sortedPostsList} client:only="svelte"></ArchivePanel>
-</MainGridLayout>
-
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>归档已迁移 · hainoir 的博客</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={new URL('/archives', Astro.site)} />
+    <script>
+      import config from '../../config/site.yaml';
+      const categoryMap = config.categoryMap ?? {};
+      const params = new URLSearchParams(location.search);
+      const tag = params.get('tag');
+      const category = params.get('category')?.replace(/^[-\s]+/, '');
+      let target = '/archives';
+      if (tag) target = '/tags/' + encodeURIComponent(tag.toLowerCase().replace(/\//g, '-'));
+      else if (category && categoryMap[category]) target = '/categories/' + categoryMap[category];
+      location.replace(target + location.hash);
+    </script>
+    <noscript><meta http-equiv="refresh" content="0; url=/archives" /></noscript>
+  </head>
+  <body data-pagefind-ignore="all"><a href="/archives">查看文章归档</a></body>
+</html>

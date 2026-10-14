@@ -1,9 +1,12 @@
 allowBuilds:
-  '@parcel/watcher': true
-  ejs: false
   esbuild: true
-  fsevents: false
-  hexo-util: false
-  highlight.js: false
   sharp: true
-  swup: true
+  onnxruntime-node: false
+  '@parcel/watcher': true
+
+# Langium imports these packages directly, but upstream declares them transitively.
+packageExtensions:
+  'langium@3.3.1':
+    dependencies:
+      vscode-languageserver-types: 3.17.5
+      vscode-jsonrpc: 8.2.0

@@ -1,0 +1,14 @@
+---
+layout: ../layouts/PageLayout.astro
+title: 关于
+coverTitle: 关于我
+description: 记录前端实践、算法推演和那些值得反复理解的问题。
+---
+
+# 关于我
+
+你好，我是 hainoir。
+
+我关注前端开发与算法，也把学习过程中的推演、实践和踩坑整理在这里。这些文章不是追求完整答案的教程仓库，而是可以继续修订的个人技术笔记。
+
+当前主要记录 React、TypeScript、JavaScript、C++ 与算法基础。

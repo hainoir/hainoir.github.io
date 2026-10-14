@@ -1,573 +1,397 @@
 ---
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-
-import ConfigCarrier from "@components/ConfigCarrier.astro";
-import { profileConfig, siteConfig } from "@/config";
-import {
-	AUTO_MODE,
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
-	BANNER_HEIGHT_HOME,
-	DARK_MODE,
-	DEFAULT_THEME,
-	LIGHT_MODE,
-	PAGE_WIDTH,
-} from "../constants/constants";
-import { defaultFavicons } from "../constants/icon";
-import type { Favicon } from "../types/config";
-import { pathsEqual, url } from "../utils/url-utils";
-import "katex/dist/katex.css";
-import "../styles/main.css";
-import "../styles/markdown.css";
-import "../styles/transition.css";
-import "../styles/scrollbar.css";
-import "../styles/photoswipe.css";
-import "../styles/expressive-code.css";
+import type { HomeSiderType } from '@constants/enum';
+import type { BlogPost } from 'types/blog';
 
 interface Props {
-	title?: string;
-	banner?: string;
-	description?: string;
-	lang?: string;
-	setOGTypeArticle?: boolean;
+  title: string;
+  description?: string;
+  siderType?: HomeSiderType;
+  post?: BlogPost;
+  /** Override canonical URL (e.g., for fallback pages pointing to default-locale version) */
+  canonical?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle } = Astro.props;
+import { ClientRouter } from 'astro:transitions';
+import AnnouncementProvider from '@components/announcement/AnnouncementProvider.astro';
+import GlobalBGMPlayer from '@components/bgm/GlobalBGMPlayer';
+import ChristmasEffects from '@components/christmas/ChristmasEffects.astro';
+import FloatingGroup from '@components/layout/FloatingGroup';
+import Header from '@components/layout/Header.astro';
+import MobileDrawer from '@components/layout/MobileDrawer.astro';
+import SearchDialog from '@components/layout/SearchDialog';
+import SearchPortal from '@components/layout/SearchPortal.astro';
+import CodeBlockFullscreen from '@components/markdown/CodeBlockFullscreen';
+import DiagramFullscreen from '@components/markdown/DiagramFullscreen';
+import ImageLightbox from '@components/markdown/ImageLightbox';
+import { Toaster } from '@components/ui/sonner';
+import { bgmConfig, christmasConfig, seoConfig, siteConfig } from '@constants/site-config';
+import { getOgImageUrl } from '@lib/seo/og-image';
+import LoadingIndicator from 'astro-loading-indicator/component';
+import { SEO } from 'astro-seo';
+import { Tooltips } from 'astro-tooltips';
+import {
+  defaultLocale,
+  getAlternateUrl,
+  getHtmlLang,
+  getLocaleFromUrl,
+  isI18nEnabled,
+  localeList,
+  localizedPath,
+  stripLocaleFromPath,
+} from '@/i18n';
 
-// apply a class to the body element to decide the height of the banner, only used for initial page load
-// Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
-// so use Swup hooks instead to change the height immediately when a link is clicked
-const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
+import '@styles/index.css';
 
-// defines global css variables
-// why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
-const configHue = siteConfig.themeColor.hue;
-if (!banner || typeof banner !== "string" || banner.trim() === "") {
-	banner = siteConfig.banner.src;
-}
+const {
+  title = seoConfig.title,
+  description = seoConfig.description,
+  siderType,
+  post,
+  canonical: canonicalOverride,
+} = Astro.props;
 
-// TODO don't use post cover as banner for now
-banner = siteConfig.banner.src;
+// react-grab: dev-only tool for copying React component context (file, component name, HTML)
+// Enable by setting REACT_GRAB=true in .env
+// TODO: siderType should be custom in router file, not in layout
 
-const enableBanner = siteConfig.banner.enable;
+// i18n: derive locale from URL and compute BCP 47 lang tag
+const locale = getLocaleFromUrl(Astro.url.pathname);
+const htmlLang = getHtmlLang(locale);
 
-let pageTitle: string;
-if (title) {
-	pageTitle = `${title} - ${siteConfig.title}`;
-} else {
-	pageTitle = `${siteConfig.title} - ${siteConfig.subtitle}`;
-}
+// Detect if current page is a post page for mobile header (locale-prefix safe)
+const isPostPage = stripLocaleFromPath(Astro.url.pathname).startsWith('/post/');
 
-const favicons: Favicon[] =
-	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
+// OGP image: use post cover if available, otherwise use default from config, fallback to avatar
+const ogImage = getOgImageUrl(post?.data.cover, Astro.site);
 
-// const siteLang = siteConfig.lang.replace('_', '-')
-if (!lang) {
-	lang = `${siteConfig.lang}`;
-}
-const siteLang = lang.replace("_", "-");
-
-const bannerOffsetByPosition = {
-	top: `${BANNER_HEIGHT_EXTEND}vh`,
-	center: `${BANNER_HEIGHT_EXTEND / 2}vh`,
-	bottom: "0",
-};
-const bannerOffset =
-	bannerOffsetByPosition[siteConfig.banner.position || "center"];
+// Pre-compute i18n URLs for <head> links
+const rssHref = new URL(localizedPath('/rss.xml', locale), Astro.site).href;
+const hreflangLinks = localeList.map((loc) => ({
+  lang: getHtmlLang(loc),
+  href: new URL(getAlternateUrl(Astro.url.pathname, loc), Astro.site).href,
+}));
+const xDefaultHref = new URL(getAlternateUrl(Astro.url.pathname, defaultLocale), Astro.site).href;
+const canonicalHref = canonicalOverride ?? Astro.url.href;
 ---
 
-<!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
-	  data-overlayscrollbars-initialize
->
-	<head>
+<!doctype html>
+<html transition:name="root" lang={htmlLang} class="vertical-scrollbar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
 
-		<title>{pageTitle}</title>
+    <!-- Preconnect to third-party origins for faster resource loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://chinese-font.netlify.app" crossorigin />
+    <link rel="dns-prefetch" href="https://chinese-font.netlify.app" />
 
-		<meta charset="UTF-8" />
-		<meta name="description" content={description || pageTitle}>
-		<meta name="author" content={profileConfig.name}>
+    {/* Async load rounded fonts — Japanese pages use Gen Jyuu Gothic P, others use ChillRoundF (fix #113) */}
+    {locale === 'ja' ? (
+      <>
+        <link rel="stylesheet" href="/fonts/GenJyuuGothic-P-Regular/result.css" media="print" onload="this.setAttribute('media','all')" />
+        <link rel="stylesheet" href="/fonts/GenJyuuGothic-P-Bold/result.css" media="print" onload="this.setAttribute('media','all')" />
+      </>
+    ) : (
+      <>
+        <link rel="stylesheet" href="/fonts/ChillRoundFRegular/result.css" media="print" onload="this.setAttribute('media','all')" />
+        <link rel="stylesheet" href="/fonts/ChillRoundFBold/result.css" media="print" onload="this.setAttribute('media','all')" />
+      </>
+    )}
 
-		<meta property="og:site_name" content={siteConfig.title}>
-		<meta property="og:url" content={Astro.url}>
-		<meta property="og:title" content={pageTitle}>
-		<meta property="og:description" content={description || pageTitle}>
-		{setOGTypeArticle ? (
-        <meta property="og:type" content="article" />
-        ) : (
-        <meta property="og:type" content="website" />
-        )}
+    <ClientRouter />
+    <LoadingIndicator color="#e9536a" />
+    <Tooltips />
+    <!-- SEO 元数据由 astro-seo 管理 -->
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalHref}
+      openGraph={{
+        basic: {
+          title: title,
+          type: 'website',
+          image: ogImage || '',
+          url: Astro.url.href,
+        },
+        optional: {
+          siteName: siteConfig.name,
+          description: description,
+        },
+      }}
+      twitter={{
+        card: ogImage ? 'summary_large_image' : 'summary',
+        title: title,
+        description: description,
+        ...(ogImage && { image: ogImage }),
+      }}
+      extend={{
+        meta: [{ name: 'author', content: siteConfig.author || '' }],
+      }}
+    />
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssHref} />
+    {/* hreflang alternate links for SEO — only output when multiple locales are configured */}
+    {isI18nEnabled && hreflangLinks.map(({ lang, href }) => (
+      <link rel="alternate" hreflang={lang} href={href} />
+    ))}
+    {isI18nEnabled && <link rel="alternate" hreflang="x-default" href={xDefaultHref} />}
 
-		<meta name="twitter:card" content="summary_large_image">
-		<meta property="twitter:url" content={Astro.url}>
-		<meta name="twitter:title" content={pageTitle}>
-		<meta name="twitter:description" content={description || pageTitle}>
+    <script is:inline>
+      // 主题系统 - 立即执行以防止 FOUC（无样式内容闪烁）
+      // 优先级：1. 用户手动选择 > 2. 系统偏好
+      (function() {
+        function getTheme() {
+          // 用户明确选择了主题
+          if (localStorage.theme === 'dark') return 'dark';
+          if (localStorage.theme === 'light') return 'light';
+          // 未设置，跟随系统偏好
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
 
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		{favicons.map(favicon => (
-			<link rel="icon"
-				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
-				  sizes={favicon.sizes}
-				  media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
-			/>
-		))}
+        function applyTheme(theme) {
+          var root = document.documentElement;
+          root.classList.toggle('dark', theme === 'dark');
+          root.dataset.theme = theme; // For astro-mermaid autoTheme
+        }
 
-		<!-- Set the theme before the page is rendered to avoid a flash -->
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
-			// Load the theme from local storage
-			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
-			switch (theme) {
-				case LIGHT_MODE:
-					document.documentElement.classList.remove('dark');
-					break
-				case DARK_MODE:
-					document.documentElement.classList.add('dark');
-					break
-				case AUTO_MODE:
-					if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-						document.documentElement.classList.add('dark');
-					} else {
-						document.documentElement.classList.remove('dark');
-					}
-			}
+        // 立即应用主题
+        applyTheme(getTheme());
 
-			// Load the hue from local storage
-			const hue = localStorage.getItem('hue') || configHue;
-			document.documentElement.style.setProperty('--hue', hue);
+        // 监听系统主题偏好变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+          // 仅当用户未明确选择主题时自动切换
+          if (!('theme' in localStorage)) {
+            applyTheme(getTheme());
+          }
+        });
 
-			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-			offset = offset - offset % 4;
-			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
-		</script>
-		<style define:vars={{
-			configHue,
-			'page-width': `${PAGE_WIDTH}rem`,
-		}}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
+        // View Transition 切换页面后重新应用主题（在 DOM 渲染前）
+        document.addEventListener('astro:after-swap', function() {
+          applyTheme(getTheme());
+        });
+      })();
+    </script>
+    <script is:inline define:vars={{ christmasFeatureEnabled: christmasConfig.enabled }}>
+      // 立即执行圣诞状态检查 否则彩灯等会闪烁
+      (function () {
+        // 如果构建时配置关闭，则始终不启用
+        if (!christmasFeatureEnabled) {
+          document.documentElement.classList.remove('christmas');
+          return;
+        }
+        // 否则使用用户偏好
+        var stored = localStorage.getItem('christmas-enabled');
+        var enabled = stored !== 'false'; // 默认启用
+        document.documentElement.classList.toggle('christmas', enabled);
+      })();
+    </script>
 
+    <script>
+      if (import.meta.env.DEV && import.meta.env.REACT_GRAB === 'true') {
+        import('react-grab');
+      }
+    </script>
 
-		<slot name="head"></slot>
+    <!-- 子页面可通过 slot="head" 注入额外的 head 内容（如 JSON-LD） -->
+    <slot name="head" />
 
-		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
+    <script>
+      // CodePen embed initialization for Astro page transitions
+      // https://blog.codepen.io/documentation/embedded-pens/
 
-	</head>
-	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
-		  data-overlayscrollbars-initialize
-	>
-		<ConfigCarrier></ConfigCarrier>
-		<slot />
+      declare global {
+        interface Window {
+          __CPEmbed?: () => void;
+        }
+      }
 
-		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
-		<div id="page-height-extend" class="hidden h-[300vh]"></div>
-	</body>
+      let codepenScriptLoaded = false;
+
+      function loadCodePenScript() {
+        return new Promise<void>((resolve, reject) => {
+          // Check if already loaded
+          if (codepenScriptLoaded || window.__CPEmbed) {
+            resolve();
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = 'https://cpwebassets.codepen.io/assets/embed/ei.js';
+          script.async = true;
+          script.onload = () => {
+            codepenScriptLoaded = true;
+            resolve();
+          };
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      async function initializeCodePenEmbeds() {
+        // Check if there are any CodePen embeds on the page
+        const codepenElements = document.querySelectorAll('.codepen');
+        if (codepenElements.length === 0) {
+          return;
+        }
+
+        try {
+          // Load the CodePen script if not already loaded
+          await loadCodePenScript();
+
+          // Initialize all CodePen embeds
+          if (window.__CPEmbed) {
+            window.__CPEmbed();
+          }
+        } catch (error) {
+          console.error('[CodePen Embed] Failed to load CodePen embed script:', error);
+        }
+      }
+
+      // Initialize on initial page load
+      if (document.readyState !== 'loading') {
+        initializeCodePenEmbeds();
+      }
+
+      // Re-initialize on Astro page transitions
+      document.addEventListener('astro:page-load', initializeCodePenEmbeds);
+    </script>
+    <script>
+      /**
+       * Mermaid Navigation Fix
+       * 修复从无 mermaid 页面导航到有 mermaid 页面时的渲染问题
+       *
+       * 问题根源：astro-mermaid 的 astro:after-swap 监听器被注册在 import().then() 内部
+       * 当首页没有 mermaid 图表时，监听器不会被注册，导致客户端导航时无法渲染
+       */
+      let mermaidModule: typeof import('mermaid').default | null = null;
+      let themeObserverSetup = false;
+
+      function hasUnprocessedDiagrams() {
+        return document.querySelectorAll('pre.mermaid:not([data-processed])').length > 0;
+      }
+
+      function getCurrentTheme(): 'default' | 'dark' | 'forest' | 'neutral' | 'base' | 'null' | undefined {
+        const dataTheme = document.documentElement.getAttribute('data-theme') || document.body?.getAttribute('data-theme');
+        // Explicitly restrict mapping to supported values
+        switch (dataTheme) {
+          case 'default':
+          case 'dark':
+          case 'forest':
+          case 'neutral':
+          case 'base':
+          case 'null':
+            return dataTheme;
+          case 'light':
+            // Map any explicit "light" to "default"
+            return 'default';
+          default:
+            return 'default';
+        }
+      }
+
+      async function initMermaidDiagrams() {
+        const diagrams = document.querySelectorAll('pre.mermaid:not([data-processed])');
+        if (diagrams.length === 0) return;
+
+        if (!mermaidModule) {
+          const { default: mermaid } = await import('mermaid');
+          mermaidModule = mermaid;
+        }
+
+        mermaidModule.initialize({
+          startOnLoad: false,
+          theme: getCurrentTheme(),
+          gitGraph: { mainBranchName: 'main', showCommitLabel: true, showBranches: true, rotateCommitLabel: true },
+        });
+
+        for (const diagram of diagrams) {
+          const pre = diagram as HTMLElement;
+          if (!pre.hasAttribute('data-diagram')) {
+            pre.setAttribute('data-diagram', pre.textContent || '');
+          }
+          const definition = pre.getAttribute('data-diagram') || '';
+          const id = 'mermaid-' + Math.random().toString(36).slice(2, 11);
+
+          try {
+            const { svg } = await mermaidModule.render(id, definition);
+            pre.innerHTML = svg;
+            pre.setAttribute('data-processed', 'true');
+          } catch (error) {
+            console.error('[mermaid-nav-fix] Error:', error);
+            pre.setAttribute('data-processed', 'true');
+          }
+        }
+
+        window.dispatchEvent(new CustomEvent('mermaid:rendered'));
+
+        if (!themeObserverSetup && mermaidModule) {
+          const observer = new MutationObserver(() => {
+            document.querySelectorAll('pre.mermaid[data-processed]').forEach((d) => d.removeAttribute('data-processed'));
+            initMermaidDiagrams();
+          });
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+          themeObserverSetup = true;
+        }
+      }
+
+      // 关键：始终注册监听器，不依赖当前页面内容
+      // 只处理客户端导航场景，直接访问时由 astro-mermaid 处理
+      document.addEventListener('astro:after-swap', () => {
+        requestAnimationFrame(() => {
+          if (hasUnprocessedDiagrams()) {
+            initMermaidDiagrams();
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <ChristmasEffects transition:persist="christmas-snowfall" />
+    <div class="flex min-h-screen flex-col text-black dark:text-white">
+      <Header isPostPage={isPostPage} tocNumbering={post?.data.tocNumbering ?? true} />
+      <main class="relative flex grow flex-col gap-4">
+        {(<slot />)}
+      </main>
+      {bgmConfig.enabled && bgmConfig.audio.length > 0 && (
+        <div transition:persist="global-bgm">
+          <GlobalBGMPlayer client:only="react" audioGroups={bgmConfig.audio} metingApi={bgmConfig.metingApi} />
+        </div>
+      )}
+      <FloatingGroup client:only="react" />
+      <MobileDrawer type={siderType} post={post} />
+      <SearchDialog client:idle />
+      <SearchPortal />
+      <CodeBlockFullscreen client:idle />
+      <DiagramFullscreen client:idle />
+      <ImageLightbox client:idle />
+      <Toaster client:idle />
+      <AnnouncementProvider />
+    </div>
+  </body>
 </html>
 
-<style is:global define:vars={{
-	bannerOffset,
-	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
-	'banner-height': `${BANNER_HEIGHT}vh`,
-}}>
-@tailwind components;
-@layer components {
-	.enable-banner.is-home #banner-wrapper {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--banner-height-extend)]
-	}
-	.enable-banner #banner-wrapper {
-		@apply h-[var(--banner-height-home)]
-	}
+<style is:global>
+  /* Progressive enhancement: scroll-state is experimental, browsers that don't support it will just not show the feather mask */
+  @supports (container-type: scroll-state) {
+    .scroll-feather-mask {
+      container-type: scroll-state;
+    }
 
-	.enable-banner.is-home #banner {
-		@apply h-[var(--banner-height-home)] translate-y-0
-	}
-	.enable-banner #banner {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)]
-	}
-	.enable-banner.is-home #main-grid {
-		@apply translate-y-[var(--banner-height-extend)];
-	}
-	.enable-banner #top-row {
-		@apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
-	}
-	.enable-banner.is-home #sidebar-sticky {
-		@apply top-[calc(1rem_-_var(--banner-height-extend))]
-	}
-	.navbar-hidden {
-		@apply opacity-0 -translate-y-16
-	}
-}
+  @container scroll-state(scrollable: bottom) {
+      .scroll-feather-mask::after {
+        content: '';
+        background: linear-gradient(to bottom, transparent 0%, var(--gradient-bg-start) var(--mask-end-percent, 50%), var(--gradient-bg-start) var(--mask-start-percent, 100%));
+        position: absolute;
+        top: var(--mask-top, auto);
+        left: var(--mask-left, 0);
+        right: var(--mask-right, 0);
+        bottom: var(--mask-bottom, 0);
+        z-index: 10;
+        display: block;
+        height: var(--mask-height, 5rem);
+      }
+    }
+  }
 </style>
-
-<script>
-import 'overlayscrollbars/overlayscrollbars.css';
-import {
-	OverlayScrollbars,
-	// ScrollbarsHidingPlugin,
-	// SizeObserverPlugin,
-	// ClickScrollPlugin
-} from 'overlayscrollbars';
-import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
-import {pathsEqual, url} from "../utils/url-utils";
-import {
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_HOME,
-	BANNER_HEIGHT_EXTEND,
-	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT
-} from "../constants/constants";
-import { siteConfig } from '../config';
-
-/* Preload fonts */
-// (async function() {
-// 	try {
-// 		await Promise.all([
-// 			document.fonts.load("400 1em Roboto"),
-// 			document.fonts.load("700 1em Roboto"),
-// 		]);
-// 		document.body.classList.remove("hidden");
-// 	} catch (error) {
-// 		console.log("Failed to load fonts:", error);
-// 	}
-// })();
-
-/* TODO This is a temporary solution for style flicker issue when the transition is activated */
-/* issue link: https://github.com/withastro/astro/issues/8711, the solution get from here too */
-/* update: fixed in Astro 3.2.4 */
-/*
-function disableAnimation() {
-	const css = document.createElement('style')
-	css.appendChild(
-		document.createTextNode(
-			`*{
-              -webkit-transition:none!important;
-              -moz-transition:none!important;
-              -o-transition:none!important;
-              -ms-transition:none!important;
-              transition:none!important
-              }`
-		)
-	)
-	document.head.appendChild(css)
-
-	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
-	}
-}
-*/
-
-const bannerEnabled = !!document.getElementById('banner-wrapper')
-
-function setClickOutsideToClose(panel: string, ignores: string[]) {
-	document.addEventListener("click", event => {
-		let panelDom = document.getElementById(panel);
-		let tDom = event.target;
-		if (!(tDom instanceof Node)) return;		// Ensure the event target is an HTML Node
-		for (let ig of ignores) {
-			let ie = document.getElementById(ig)
-			if (ie == tDom || (ie?.contains(tDom))) {
-				return;
-			}
-		}
-		panelDom!.classList.add("float-panel-closed");
-	});
-}
-setClickOutsideToClose("display-setting", ["display-setting", "display-settings-switch"])
-setClickOutsideToClose("nav-menu-panel", ["nav-menu-panel", "nav-menu-switch"])
-setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-switch"])
-
-
-function loadTheme() {
-	const theme = getStoredTheme()
-	setTheme(theme)
-}
-
-function loadHue() {
-	setHue(getHue())
-}
-
-function initCustomScrollbar() {
-	const bodyElement = document.querySelector('body');
-	if (!bodyElement) return;
-	OverlayScrollbars(
-		// docs say that a initialization to the body element would affect native functionality like window.scrollTo
-		// but just leave it here for now
-		{
-			target: bodyElement,
-			cancel: {
-				nativeScrollbarsOverlaid: true,    // don't initialize the overlay scrollbar if there is a native one
-			}
-		}, {
-		scrollbars: {
-			theme: 'scrollbar-base scrollbar-auto py-1',
-			autoHide: 'move',
-			autoHideDelay: 500,
-			autoHideSuspend: false,
-		},
-	});
-
-	const katexElements = document.querySelectorAll('.katex-display') as NodeListOf<HTMLElement>;
-
-	const katexObserverOptions = {
-		root: null,
-		rootMargin: '100px',
-		threshold: 0.1
-	};
-
-	const processKatexElement = (element: HTMLElement) => {
-		if (!element.parentNode) return;
-		if (element.hasAttribute('data-scrollbar-initialized')) return;
-
-		const container = document.createElement('div');
-		container.className = 'katex-display-container';
-		container.setAttribute('aria-label', 'scrollable container for formulas');
-
-		element.parentNode.insertBefore(container, element);
-		container.appendChild(element);
-
-		OverlayScrollbars(container, {
-			scrollbars: {
-				theme: 'scrollbar-base scrollbar-auto',
-				autoHide: 'leave',
-				autoHideDelay: 500,
-				autoHideSuspend: false
-			}
-		});
-
-		element.setAttribute('data-scrollbar-initialized', 'true');
-	};
-
-	const katexObserver = new IntersectionObserver((entries, observer) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-			processKatexElement(entry.target as HTMLElement);
-			observer.unobserve(entry.target);
-			}
-		});
-	}, katexObserverOptions);
-
-	katexElements.forEach(element => {
-		katexObserver.observe(element);
-	});
-}
-
-function showBanner() {
-	if (!siteConfig.banner.enable) return;
-
-	const banner = document.getElementById('banner');
-	if (!banner) {
-		console.error('Banner element not found');
-		return;
-	}
-
-	banner.classList.remove('opacity-0', 'scale-105');
-}
-
-function init() {
-	// disableAnimation()()		// TODO
-	loadTheme();
-	loadHue();
-	initCustomScrollbar();
-	showBanner();
-}
-
-/* Load settings when entering the site */
-init();
-
-const setup = () => {
-	// TODO: temp solution to change the height of the banner
-/*
-	window.swup.hooks.on('animation:out:start', () => {
-		const path = window.location.pathname
-		const body = document.querySelector('body')
-		if (path[path.length - 1] === '/' && !body.classList.contains('is-home')) {
-			body.classList.add('is-home')
-		} else if (path[path.length - 1] !== '/' && body.classList.contains('is-home')) {
-			body.classList.remove('is-home')
-		}
-	})
-*/
-	window.swup.hooks.on('link:click', () => {
-		// Remove the delay for the first time page load
-		document.documentElement.style.setProperty('--content-delay', '0ms')
-
-		// prevent elements from overlapping the navbar
-		if (!bannerEnabled) {
-			return
-		}
-		let threshold = window.innerHeight * (BANNER_HEIGHT / 100) - 72 - 16
-		let navbar = document.getElementById('navbar-wrapper')
-		if (!navbar || !document.body.classList.contains('lg:is-home')) {
-			return
-		}
-		if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-			navbar.classList.add('navbar-hidden')
-		}
-	})
-	window.swup.hooks.on('content:replace', initCustomScrollbar)
-	window.swup.hooks.on('visit:start', (visit: {to: {url: string}}) => {
-		// change banner height immediately when a link is clicked
-		const bodyElement = document.querySelector('body')
-		if (pathsEqual(visit.to.url, url('/'))) {
-			bodyElement!.classList.add('lg:is-home');
-		} else {
-			bodyElement!.classList.remove('lg:is-home');
-		}
-
-		// increase the page height during page transition to prevent the scrolling animation from jumping
-		const heightExtend = document.getElementById('page-height-extend')
-		if (heightExtend) {
-			heightExtend.classList.remove('hidden')
-		}
-
-		// Hide the TOC while scrolling back to top
-		let toc = document.getElementById('toc-wrapper');
-		if (toc) {
-			toc.classList.add('toc-not-ready')
-		}
-	});
-	window.swup.hooks.on('page:view', () => {
-		// hide the temp high element when the transition is done
-		const heightExtend = document.getElementById('page-height-extend')
-		if (heightExtend) {
-			heightExtend.classList.remove('hidden')
-		}
-	});
-	window.swup.hooks.on('visit:end', (_visit: {to: {url: string}}) => {
-		setTimeout(() => {
-			const heightExtend = document.getElementById('page-height-extend')
-			if (heightExtend) {
-				heightExtend.classList.add('hidden')
-			}
-
-            // Just make the transition looks better
-            const toc = document.getElementById('toc-wrapper');
-            if (toc) {
-                toc.classList.remove('toc-not-ready')
-            }
-        }, 200)
-	});
-}
-if (window?.swup?.hooks) {
-	setup()
-} else {
-	document.addEventListener('swup:enable', setup)
-}
-
-let backToTopBtn = document.getElementById('back-to-top-btn');
-let toc = document.getElementById('toc-wrapper');
-let navbar = document.getElementById('navbar-wrapper')
-function scrollFunction() {
-	let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
-
-	if (backToTopBtn) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
-			backToTopBtn.classList.remove('hide')
-		} else {
-			backToTopBtn.classList.add('hide')
-		}
-	}
-
-	if (bannerEnabled && toc) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
-			toc.classList.remove('toc-hide')
-		} else {
-			toc.classList.add('toc-hide')
-		}
-	}
-
-	if (!bannerEnabled) return
-	if (navbar) {
-		const NAVBAR_HEIGHT = 72
-		const MAIN_PANEL_EXCESS_HEIGHT = MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16			// The height the main panel overlaps the banner
-
-		let bannerHeight = BANNER_HEIGHT
-		if (document.body.classList.contains('lg:is-home') && window.innerWidth >= 1024) {
-			bannerHeight = BANNER_HEIGHT_HOME
-		}
-		let threshold = window.innerHeight * (bannerHeight / 100) - NAVBAR_HEIGHT - MAIN_PANEL_EXCESS_HEIGHT - 16
-		if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-			navbar.classList.add('navbar-hidden')
-		} else {
-			navbar.classList.remove('navbar-hidden')
-		}
-	}
-}
-window.onscroll = scrollFunction
-
-window.onresize = () => {
-	// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-	let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-	offset = offset - offset % 4;
-	document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
-}
-
-</script>
-
-<script>
-import PhotoSwipeLightbox from "photoswipe/lightbox"
-import "photoswipe/style.css"
-
-let lightbox: PhotoSwipeLightbox
-let pswp = import("photoswipe")
-
-function createPhotoSwipe() {
-	lightbox = new PhotoSwipeLightbox({
-		gallery: ".custom-md img, #post-cover img",
-		pswpModule: () => pswp,
-		closeSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></svg>',
-		zoomSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M340-540h-40q-17 0-28.5-11.5T260-580q0-17 11.5-28.5T300-620h40v-40q0-17 11.5-28.5T380-700q17 0 28.5 11.5T420-660v40h40q17 0 28.5 11.5T500-580q0 17-11.5 28.5T460-540h-40v40q0 17-11.5 28.5T380-460q-17 0-28.5-11.5T340-500v-40Zm40 220q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>',
-		padding: { top: 20, bottom: 20, left: 20, right: 20 },
-		wheelToZoom: true,
-		arrowPrev: false,
-		arrowNext: false,
-		imageClickAction: 'close',
-		tapAction: 'close',
-		doubleTapAction: 'zoom',
-	})
-
-	lightbox.addFilter("domItemData", (itemData, element) => {
-		if (element instanceof HTMLImageElement) {
-			itemData.src = element.src
-
-			itemData.w = Number(element.naturalWidth || window.innerWidth)
-			itemData.h = Number(element.naturalHeight || window.innerHeight)
-
-			itemData.msrc = element.src
-		}
-
-		return itemData
-	})
-
-	lightbox.init()
-}
-
-const setup = () => {
-	if (!lightbox) {
-		createPhotoSwipe()
-	}
-	window.swup.hooks.on("page:view", () => {
-		createPhotoSwipe()
-	})
-
-	window.swup.hooks.on(
-		"content:replace",
-		() => {
-			lightbox?.destroy?.()
-		},
-		{ before: true },
-	)
-}
-
-if (window.swup) {
-	setup()
-} else {
-	document.addEventListener("swup:enable", setup)
-}
-</script>

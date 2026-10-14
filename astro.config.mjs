@@ -1,195 +1,257 @@
-import sitemap from "@astrojs/sitemap";
-import { fileURLToPath } from "node:url";
-import { readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import svelte from "@astrojs/svelte";
-import tailwind from "@astrojs/tailwind";
-import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
-import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import swup from "@swup/astro";
-import expressiveCode from "astro-expressive-code";
-import icon from "astro-icon";
-import { defineConfig } from "astro/config";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeComponents from "rehype-components"; /* Render the custom directive content */
-import rehypeKatex from "rehype-katex";
-import rehypeSlug from "rehype-slug";
-import remarkDirective from "remark-directive"; /* Handle directives */
-import remarkGithubAdmonitionsToDirectives from "remark-github-admonitions-to-directives";
-import remarkMath from "remark-math";
-import remarkSectionize from "remark-sectionize";
-import { expressiveCodeConfig } from "./src/config.ts";
-import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
-import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
-import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
-import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
-import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
-import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
-import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
+import fs from 'node:fs';
+import path from 'node:path';
+import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
+import yaml from '@rollup/plugin-yaml';
+import tailwindcss from '@tailwindcss/vite';
+import umami from '@yeskunall/astro-umami';
+import { defineConfig } from 'astro/config';
+import icon from 'astro-icon';
+import mermaid from 'astro-mermaid';
+import pagefind from 'astro-pagefind';
+import robotsTxt from 'astro-robots-txt';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug';
+import remarkDirective from 'remark-directive';
+import remarkMath from 'remark-math';
+import Sonda from 'sonda/astro';
+import { loadEnv } from 'vite';
+import svgr from 'vite-plugin-svgr';
+import YAML from 'yaml';
+import { rehypeEncryptedBlock } from './src/lib/markdown/rehype-encrypted-block.ts';
+import { rehypeEncryptedPost } from './src/lib/markdown/rehype-encrypted-post.ts';
+import { rehypeImagePlaceholder } from './src/lib/markdown/rehype-image-placeholder.ts';
+import { rehypeLegacyImages } from './src/lib/markdown/rehype-legacy-images.ts';
+import { rehypeShokaAttrs } from './src/lib/markdown/rehype-shoka-attrs.ts';
+import { remarkEncryptedDirective } from './src/lib/markdown/remark-encrypted-directive.ts';
+import { remarkLinkEmbed } from './src/lib/markdown/remark-link-embed.ts';
+import { remarkIns, remarkMark } from './src/lib/markdown/remark-shoka-effects.ts';
+import { remarkShokaPreprocess } from './src/lib/markdown/remark-shoka-preprocess.ts';
+import { remarkShokaRuby } from './src/lib/markdown/remark-shoka-ruby.ts';
+import { remarkShokaSpoiler } from './src/lib/markdown/remark-shoka-spoiler.ts';
+import { shokaMetaTransformer } from './src/lib/markdown/shiki-meta-transformer.ts';
+import { normalizeUrl } from './src/lib/utils.ts';
 
-const flattenLegacyPostFiles = () => ({
-	name: "flatten-legacy-post-files",
-	hooks: {
-		"astro:build:done": async ({ dir }) => {
-			const postsDir = fileURLToPath(new URL("./posts/", dir));
-			const entries = await readdir(postsDir, { withFileTypes: true });
-			await Promise.all(entries
-				.filter((entry) => entry.isDirectory() && /\.html$/i.test(entry.name))
-				.map(async (entry) => {
-					const directory = join(postsDir, entry.name);
-					const indexPath = join(directory, "index.html");
-					const content = await readFile(indexPath);
-					await rm(directory, { recursive: true, force: true });
-					await writeFile(join(postsDir, entry.name), content);
-				}));
-		},
-	},
-});
+// Load YAML config directly with Node.js (before Vite plugins are available)
+// This is only used in astro.config.mjs - other files use @rollup/plugin-yaml
+function loadConfigForAstro() {
+  const configPath = path.join(process.cwd(), 'config', 'site.yaml');
+  const content = fs.readFileSync(configPath, 'utf8');
+  return YAML.parse(content);
+}
+
+const yamlConfig = loadConfigForAstro();
+
+// Bundle analysis mode: ANALYZE=true pnpm build
+// Use loadEnv to read .env file (astro.config.mjs runs before Vite loads .env)
+const { ANALYZE } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
+const isAnalyze = ANALYZE === 'true';
+// Get Umami analytics config from YAML
+const umamiConfig = yamlConfig.analytics?.umami;
+const umamiEnabled = umamiConfig?.enabled ?? false;
+const umamiId = umamiConfig?.id;
+// Normalize endpoint URL to remove trailing slashes
+const umamiEndpoint = normalizeUrl(umamiConfig?.endpoint);
+
+// Get robots.txt config from YAML
+const robotsConfig = yamlConfig.seo?.robots;
+
+// i18n configuration from YAML
+const i18nYaml = yamlConfig.i18n;
+const i18nDefaultLocale = i18nYaml?.defaultLocale ?? 'zh';
+const i18nLocales = (i18nYaml?.locales ?? [{ code: 'zh' }]).map((l) => l.code);
+const hasMultipleLocales = i18nLocales.length > 1;
+
+/**
+ * Vite plugin for conditional Three.js bundling
+ * When christmas snowfall is disabled, replaces SnowfallCanvas with a noop component
+ * This saves ~879KB from the bundle
+ */
+function conditionalSnowfall() {
+  const VIRTUAL_ID = 'virtual:snowfall-canvas';
+  const RESOLVED_ID = `\0${VIRTUAL_ID}`;
+  const christmas = yamlConfig.christmas || { enabled: false, features: {} };
+  const isEnabled = christmas.enabled && christmas.features?.snowfall;
+
+  return {
+    name: 'conditional-snowfall',
+    resolveId(id) {
+      if (id === VIRTUAL_ID) return RESOLVED_ID;
+      // Redirect the alias import to virtual module when disabled
+      if (!isEnabled && id === '@components/christmas/SnowfallCanvas') {
+        return RESOLVED_ID;
+      }
+    },
+    load(id) {
+      if (id === RESOLVED_ID) {
+        // Return noop component when christmas is disabled
+        return 'export function SnowfallCanvas() { return null; }';
+      }
+    },
+  };
+}
+
+// Build conditional plugin lists based on content config
+const contentConfig = yamlConfig.content || {};
+
+// Remark plugins — order matters
+// remarkShokaPreprocess MUST be first: it re-parses raw text to fix GFM/remark conflicts
+// (+++, ~sub~, {% links %} YAML etc.) before any AST-level plugin runs.
+const remarkPlugins = [];
+{
+  const needsPreprocess =
+    contentConfig.enableShokaContainers !== false ||
+    contentConfig.enableShokaHexoTags !== false ||
+    contentConfig.enableShokaEffects !== false;
+  if (needsPreprocess) {
+    remarkPlugins.push([
+      remarkShokaPreprocess,
+      {
+        enableContainers: contentConfig.enableShokaContainers !== false,
+        enableHexoTags: contentConfig.enableShokaHexoTags !== false,
+        enableSuperSub: contentConfig.enableShokaEffects !== false,
+        enableMath: contentConfig.enableMath !== false,
+        enableEncryptedBlock: contentConfig.enableEncryptedBlock ?? false,
+      },
+    ]);
+  }
+}
+// remarkMath must run BEFORE ruby/spoiler/effects so that $...$ content
+// is already parsed into inlineMath/math nodes and won't be touched by text-scanning plugins.
+if (contentConfig.enableMath !== false) remarkPlugins.push(remarkMath);
+if (contentConfig.enableShokaSpoiler !== false) remarkPlugins.push(remarkShokaSpoiler);
+if (contentConfig.enableShokaRuby !== false) remarkPlugins.push(remarkShokaRuby);
+if (contentConfig.enableShokaEffects !== false) {
+  remarkPlugins.push(remarkIns, remarkMark);
+}
+// Encrypted block: remarkDirective is registered in BOTH places —
+// here for the main Astro pipeline (when remarkShokaPreprocess skips re-parse),
+// and inside remarkShokaPreprocess's re-parse pipeline (when it does re-parse).
+if (contentConfig.enableEncryptedBlock) {
+  remarkPlugins.push(remarkDirective, remarkEncryptedDirective);
+}
+// Link embed is always on (existing feature)
+remarkPlugins.push([
+  remarkLinkEmbed,
+  {
+    enableTweetEmbed: contentConfig.enableTweetEmbed ?? true,
+    enableOGPreview: contentConfig.enableOGPreview ?? true,
+  },
+]);
+
+// Rehype plugins — order matters
+const rehypePlugins = [
+  rehypeSlug,
+  [
+    rehypeAutolinkHeadings,
+    {
+      behavior: 'append',
+      properties: {
+        className: ['anchor-link'],
+        ariaLabel: 'Link to this section',
+      },
+    },
+  ],
+];
+if (contentConfig.enableShokaAttrs !== false) rehypePlugins.push(rehypeShokaAttrs);
+rehypePlugins.push(rehypeLegacyImages, rehypeImagePlaceholder);
+if (contentConfig.enableMath !== false) rehypePlugins.push(rehypeKatex);
+// Encrypted block/post MUST be last rehype plugins — encrypt fully-rendered children
+if (contentConfig.enableEncryptedBlock) {
+  rehypePlugins.push(rehypeEncryptedBlock);
+  rehypePlugins.push(rehypeEncryptedPost);
+}
+
+// Shiki transformers
+const shikiTransformers = [];
+if (contentConfig.enableCodeMeta !== false) shikiTransformers.push(shokaMetaTransformer());
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://hainoir.github.io/",
-	base: "/",
-	trailingSlash: "always",
-	integrations: [
-		tailwind({
-			nesting: true,
-		}),
-		swup({
-			theme: false,
-			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
-			// the default value `transition-` cause transition delay
-			// when the Tailwind class `transition-all` is used
-			containers: ["main", "#toc"],
-			smoothScrolling: true,
-			cache: true,
-			preload: true,
-			accessibility: true,
-			updateHead: true,
-			updateBodyClass: false,
-			globalInstance: true,
-		}),
-		icon({
-			include: {
-				"preprocess: vitePreprocess(),": ["*"],
-				"fa6-brands": ["*"],
-				"fa6-regular": ["*"],
-				"fa6-solid": ["*"],
-			},
-		}),
-		expressiveCode({
-			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
-			plugins: [
-				pluginCollapsibleSections(),
-				pluginLineNumbers(),
-				pluginLanguageBadge(),
-				pluginCustomCopyButton()
-			],
-			defaultProps: {
-				wrap: true,
-				overridesByLang: {
-					'shellsession': {
-						showLineNumbers: false,
-					},
-				},
-			},
-			styleOverrides: {
-				codeBackground: "var(--codeblock-bg)",
-				borderRadius: "0.75rem",
-				borderColor: "none",
-				codeFontSize: "0.875rem",
-				codeFontFamily: "'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-				codeLineHeight: "1.5rem",
-				frames: {
-					editorBackground: "var(--codeblock-bg)",
-					terminalBackground: "var(--codeblock-bg)",
-					terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
-					editorTabBarBackground: "var(--codeblock-topbar-bg)",
-					editorActiveTabBackground: "none",
-					editorActiveTabIndicatorBottomColor: "var(--primary)",
-					editorActiveTabIndicatorTopColor: "none",
-					editorTabBarBorderBottomColor: "var(--codeblock-topbar-bg)",
-					terminalTitlebarBorderBottomColor: "none"
-				},
-				textMarkers: {
-					delHue: 0,
-					insHue: 180,
-					markHue: 250
-				}
-			},
-			frames: {
-				showCopyToClipboardButton: false,
-			}
-		}),
-        svelte(),
-		sitemap(),
-		flattenLegacyPostFiles(),
-	],
-	markdown: {
-		remarkPlugins: [
-			remarkMath,
-			remarkReadingTime,
-			remarkExcerpt,
-			remarkGithubAdmonitionsToDirectives,
-			remarkDirective,
-			remarkSectionize,
-			parseDirectiveNode,
-		],
-		rehypePlugins: [
-			rehypeKatex,
-			rehypeSlug,
-			[
-				rehypeComponents,
-				{
-					components: {
-						github: GithubCardComponent,
-						note: (x, y) => AdmonitionComponent(x, y, "note"),
-						tip: (x, y) => AdmonitionComponent(x, y, "tip"),
-						important: (x, y) => AdmonitionComponent(x, y, "important"),
-						caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
-					},
-				},
-			],
-			[
-				rehypeAutolinkHeadings,
-				{
-					behavior: "append",
-					properties: {
-						className: ["anchor"],
-					},
-					content: {
-						type: "element",
-						tagName: "span",
-						properties: {
-							className: ["anchor-icon"],
-							"data-pagefind-ignore": true,
-						},
-						children: [
-							{
-								type: "text",
-								value: "#",
-							},
-						],
-					},
-				},
-			],
-		],
-	},
-	vite: {
-		build: {
-			rollupOptions: {
-				onwarn(warning, warn) {
-					// temporarily suppress this warning
-					if (
-						warning.message.includes("is dynamically imported by") &&
-						warning.message.includes("but also statically imported by")
-					) {
-						return;
-					}
-					warn(warning);
-				},
-			},
-		},
-	},
+  site: yamlConfig.site.url,
+  compressHTML: true,
+  markdown: {
+    // Enable GitHub Flavored Markdown
+    gfm: true,
+    remarkPlugins,
+    rehypePlugins,
+    syntaxHighlight: {
+      type: 'shiki',
+      excludeLangs: ['mermaid'],
+    },
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      transformers: shikiTransformers,
+    },
+  },
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, '');
+        return !/^\/posts\/[^/]+\.html$/.test(pathname) && !['/archive', '/2'].includes(pathname);
+      },
+    }),
+    icon({
+      include: {
+        gg: ['*'],
+        'fa6-regular': ['*'],
+        'fa6-solid': ['*'],
+        ri: ['*'],
+      },
+    }),
+    // Umami analytics - configured via config/site.yaml
+    ...(umamiEnabled && umamiId
+      ? [
+          umami({
+            id: umamiId,
+            endpointUrl: umamiEndpoint,
+            hostUrl: umamiEndpoint,
+          }),
+        ]
+      : []),
+    pagefind(),
+    mermaid({
+      autoTheme: true,
+    }),
+    robotsTxt(robotsConfig || {}),
+    ...(isAnalyze ? [Sonda()] : []),
+  ],
+  devToolbar: {
+    enabled: true,
+  },
+  vite: {
+    build: {
+      // Enable sourcemap for Sonda bundle analysis
+      sourcemap: isAnalyze,
+    },
+    plugins: [yaml(), conditionalSnowfall(), svgr(), tailwindcss()],
+    ssr: {
+      noExternal: ['react-tweet'],
+    },
+    optimizeDeps: {
+      include: ['@antv/infographic'],
+    },
+  },
+  // Only enable Astro i18n routing when multiple locales are configured.
+  // Single-locale sites skip this entirely — no /[lang]/ routes are generated.
+  ...(hasMultipleLocales && {
+    i18n: {
+      defaultLocale: i18nDefaultLocale,
+      locales: i18nLocales,
+      routing: {
+        prefixDefaultLocale: false,
+        redirectToDefaultLocale: true,
+      },
+    },
+  }),
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport',
+  },
+  trailingSlash: 'ignore',
 });
