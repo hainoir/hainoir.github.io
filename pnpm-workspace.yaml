@@ -5,6 +5,7 @@ allowBuilds:
   '@parcel/watcher': true
   protobufjs: true
   re2: true
+  nice-napi: true
   react-grab: false
 
 # Langium imports these packages directly, but upstream declares them transitively.

@@ -67,6 +67,6 @@ pnpm verify-migration
 pnpm verify-migration --built
 ```
 
-验收脚本对照迁移时的正文校验值；日后修改文章正文后，这项历史验收会提示内容已变更。
+验收脚本对照迁移时的正文校验值，兼容 Git 在 Windows/Linux 间转换的 LF/CRLF 换行符；日后修改文章正文后，这项历史验收会提示内容已变更。
 
 主题代码遵循 [AGPL-3.0](LICENSE)，保留上游主题署名。博客文章采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)。
