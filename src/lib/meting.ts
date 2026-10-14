@@ -84,13 +84,31 @@ function isMetingSong(obj: unknown): obj is MetingSong {
   return typeof o.name === 'string' && typeof o.artist === 'string' && typeof o.url === 'string';
 }
 
+/** Some HTTPS Meting endpoints return HTTP links to their own media routes. */
+function normalizeMediaUrls(song: MetingSong, api: URL): MetingSong {
+  const secureUrl = (value: string | undefined): string => {
+    if (!value) return '';
+    try {
+      const url = new URL(value);
+      if (api.protocol === 'https:' && url.protocol === 'http:' && url.hostname === api.hostname) {
+        url.protocol = 'https:';
+        return url.href;
+      }
+    } catch {
+      // Keep direct media paths unchanged.
+    }
+    return value;
+  };
+  return { ...song, url: secureUrl(song.url), pic: secureUrl(song.pic), lrc: secureUrl(song.lrc) };
+}
+
 /** Fetch songs from Meting API for a single parsed URL. */
 export async function fetchMeting(server: string, type: string, id: string, apiUrl?: string): Promise<MetingSong[]> {
-  const cacheKey = getCacheKey(server, type, id);
-  const cached = getFromCache(cacheKey);
-  if (cached) return cached;
-
   const url = new URL(apiUrl || DEFAULT_API);
+  const cacheKey = `${getCacheKey(server, type, id)}:${url.origin}${url.pathname}`;
+  const cached = getFromCache(cacheKey);
+  if (cached) return cached.map((song) => normalizeMediaUrls(song, url));
+
   const params = new URLSearchParams({ server, type, id });
   url.search = params.toString();
   const response = await fetch(url);
@@ -98,7 +116,7 @@ export async function fetchMeting(server: string, type: string, id: string, apiU
 
   const data: unknown = await response.json();
   if (!Array.isArray(data)) return [];
-  const songs = data.filter(isMetingSong) as MetingSong[];
+  const songs = data.filter(isMetingSong).map((song) => normalizeMediaUrls(song, url));
   if (songs.length > 0) setCache(cacheKey, songs);
   return songs;
 }
@@ -113,5 +131,9 @@ export async function resolvePlaylist(urls: string[], apiUrl?: string): Promise<
     }),
   );
 
+  if (results.length > 0 && results.every((result) => result.status === 'rejected')) {
+    const failed = results[0] as PromiseRejectedResult;
+    throw failed.reason;
+  }
   return results.flatMap((r) => (r.status === 'fulfilled' ? r.value : []));
 }

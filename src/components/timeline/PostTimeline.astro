@@ -1,0 +1,40 @@
+---
+import type { BlogPost } from 'types/blog';
+import { getPostLastCategory, getPostSlug } from '@lib/content';
+import { displayDate } from '@lib/date';
+import { encodeSlug } from '@lib/route';
+import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
+
+interface Props { posts: BlogPost[]; }
+const { posts } = Astro.props;
+const locale = getLocaleFromUrl(Astro.url.pathname);
+---
+
+{
+  posts.length ? (
+    <ol class="post-timeline" role="list" aria-label={t(locale, 'timeline.title')}>
+      {posts.map((post) => (
+        <li>
+          <time datetime={post.data.date.toISOString()}>{displayDate.date(post.data.date)}</time>
+          <div>
+            <a class="post-title" href={localizedPath(`/post/${encodeSlug(getPostSlug(post))}`, locale)}>{post.data.title}</a>
+            <p class="post-category">{getPostLastCategory(post).name}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  ) : <p class="text-muted-foreground">{t(locale, 'post.noPostsFound')}</p>
+}
+
+<style>
+  .post-timeline { list-style: none; margin: 0; padding: 0; }
+  li { position: relative; display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 1rem; padding: 0 0 1.75rem 1.75rem; border-left: 2px solid hsl(var(--border)); }
+  li:last-child { padding-bottom: 0; border-left-color: transparent; }
+  li::before { content: ''; position: absolute; left: -0.4rem; top: 0.4rem; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: hsl(var(--primary)); border: 2px solid hsl(var(--background)); }
+  time { padding-top: 0.25rem; font-size: 0.8rem; color: hsl(var(--muted-foreground)); }
+  .post-title { display: inline-block; min-height: 1.5rem; font-weight: 600; line-height: 1.7; overflow-wrap: anywhere; text-decoration: none; }
+  .post-title:hover { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 0.25em; }
+  .post-title:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 4px; border-radius: 2px; }
+  .post-category { margin: 0.35rem 0 0; font-size: 0.8rem; color: hsl(var(--muted-foreground)); }
+  @media (max-width: 640px) { li { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; padding-left: 1.25rem; } }
+</style>

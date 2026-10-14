@@ -20,6 +20,7 @@ pnpm preview
 
 ```sh
 pnpm new-post "我的新文章"
+pnpm new-weekly "第 1 期：本周复盘"
 ```
 
 文章位于 `src/content/blog/`，新文章默认是草稿。发布前将 `draft` 改为 `false`：
@@ -38,10 +39,13 @@ draft: false
 
 `link` 是稳定的文章标识，对应 `/post/<link>`，发布后不要随意修改。
 
+周刊草稿生成在 `src/content/blog/周刊/`，自动设置周刊分类，正文使用 `templates/weekly.md` 中的学习、工作、生活和下周计划模板。将 `draft` 改为 `false` 后，构建时自动收录到 `/weekly`、首页、文章时间线和 RSS；草稿不会出现在正式站点。
+
 ## 站点配置与发布
 
 - 站点名称、头像、导航、分类、评论等：`config/site.yaml`。
-- 关于页：`src/pages/about.md`。
+- 关于页：`src/pages/about.astro`；工作经历配置：`config/experiences.yaml`，日期使用 `YYYY-MM`，省略结束时间表示至今。关于页和侧栏共用这份配置，时间轴根据容器宽度切换横向／纵向卡片布局。可选 `logo`（本地品牌图片）、`icon`（已安装的 Iconify 图标）和 `iconColor`（十六进制颜色），优先使用 `logo`。当前两家公司采用官网标识，来源记录在 `public/img/companies/README.md`。
+- 文章时间线：`/timeline`，自动按发布日期倒序展示已发布文章。
 - 静态图片：`public/img/`。
 - 现有分类：前端、算法、工具。
 - 专栏：`/frontend-notes/`（前端手记）和 `/algorithm-notes/`（算法手记），基于现有分类自动收录文章；顶部和侧栏的“专栏”菜单提供入口。
@@ -53,7 +57,9 @@ draft: false
 - 分享预览图在构建时自动生成：站点使用 `/og/site.png`，文章使用 `/og/posts/<link>.png`，尺寸为 1200 × 630。OG、Twitter 和文章结构化数据共用该图片；复用主题字体，Windows/Linux 构建无需安装额外中文字体。
 - 评论使用 Giscus，对应 `hainoir/hainoir.github.io` 的 Announcements 讨论分类。用稳定的 `/post/<link>` 关联讨论，修改文章标题不影响评论；滚动到评论区时加载，支持明暗主题。
 - 访问统计使用 [Umami Cloud](https://cloud.umami.is/)，可在后台查看访问量、访客、来源与热门文章。`analytics.umami.endpoint` 填完整脚本地址，`id` 填 Website ID；只在正式域名记录访问，通过 Astro 切页事件上报，本地开发／预览不发送统计。
-- 音乐和追番未配置；可在站点配置中启用。
+- 音乐页：`/music`。歌单和全站浮动播放器共用 `config/site.yaml` 的 `bgm.audio`，目前为网易云歌单 824962536；可以修改歌单名称和链接。手动开始播放，浮动播放器支持站内切页时持续播放。歌单解析依赖 `bgm.metingApi`，接口失败可重试；具体歌曲能否播放受音乐平台资源可用性影响。
+- 周刊栏目：`/weekly`，名称为“周刊：每周学习、工作与生活复盘”，自动收录分类含“周刊”的文章。尚无已发布周刊时展示空状态。
+- 追番未配置；可在站点配置中启用。
 - GitHub Actions 部署流程监听 `hexo` 源码分支，将 `dist/` 发布到 GitHub Pages。迁移已合入该分支。
 
 ## 迁移记录
@@ -81,5 +87,6 @@ pnpm verify-migration --built
 
 阅读排序回归检查：`pnpm exec tsx --test scripts/reading-order.test.ts`。
 推荐排序回归检查：`pnpm exec tsx --test scripts/recommendations.test.ts`。
+音乐接口回归检查：`pnpm exec tsx --test scripts/meting.test.ts`。
 
 主题代码遵循 [AGPL-3.0](LICENSE)，保留上游主题署名。博客文章采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)。

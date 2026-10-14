@@ -10,6 +10,7 @@ import { cn, filterNavItems } from '@lib/utils';
 import { Icon } from 'astro-icon/components';
 import { getLocaleFromUrl, localizedPath, resolveNavName, stripLocaleFromPath, t } from '@/i18n';
 import type { BlogSchema } from '@/types/blog';
+import ExperienceTimeline from '@components/timeline/ExperienceTimeline.astro';
 import Social from './Social.astro';
 
 interface Props {
@@ -73,6 +74,9 @@ const strippedPath = stripLocaleFromPath(Astro.url.pathname);
     </a>
   </div>
   <div class="mt-6 flex w-full flex-col items-center gap-2.5">
+    <div class="mb-3 w-full px-2" data-pagefind-ignore>
+      <ExperienceTimeline compact />
+    </div>
     {
       filteredRouters.map((item, index) => {
         const displayName = resolveNavName(item.nameKey, item.name, locale);

@@ -17,6 +17,18 @@ export const uiStrings = {
   'nav.music': '歌单',
   'nav.weekly': '周刊',
   'nav.bangumi': '追番',
+  'nav.timeline': '时间线',
+
+  'timeline.title': '文章时间线',
+  'timeline.description': '按发布时间倒序，回看每一篇记录。',
+  'experience.title': '工作经历',
+  'experience.to': '至',
+  'experience.present': '至今',
+  'music.heading': '我的歌单',
+  'music.description': '分享一些喜欢的音乐，读文章时也可以打开右侧的背景音乐。',
+  'music.hint': '点击播放开始听歌。部分歌曲可能暂时无法播放，可以到网易云音乐打开原歌单。',
+  'music.openPlaylist': '在音乐平台打开「{name}」',
+  'music.empty': '歌单正在整理中。',
 
   // ── Common ──────────────────────────────────────────────────
   'common.search': '搜索',

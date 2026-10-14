@@ -18,6 +18,17 @@ export const uiStrings: UIStrings = {
   'nav.music': 'Music',
   'nav.weekly': 'Weekly',
   'nav.bangumi': 'Bangumi',
+  'nav.timeline': 'Timeline',
+  'timeline.title': 'Article timeline',
+  'timeline.description': 'All posts, from newest to oldest.',
+  'experience.title': 'Work experience',
+  'experience.to': ' to ',
+  'experience.present': 'Present',
+  'music.heading': 'My playlist',
+  'music.description': 'Some music I enjoy. You can also open the background music player while reading.',
+  'music.hint': 'Press play to listen. If a track is unavailable, open the original playlist on NetEase Music.',
+  'music.openPlaylist': 'Open “{name}” on the music platform',
+  'music.empty': 'The playlist is being prepared.',
 
   // ── Common ──────────────────────────────────────────────────
   'common.search': 'Search',

@@ -26,6 +26,7 @@
     "koharu": "npx tsx scripts/koharu.tsx",
     "start": "astro dev",
     "new-post": "node scripts/new-post.mjs",
+    "new-weekly": "node scripts/new-post.mjs --weekly",
     "verify-migration": "node scripts/verify-migration.mjs"
   },
   "dependencies": {

@@ -14,6 +14,8 @@ export enum Routes {
   Friends = '/friends',
   Post = '/post',
   Archives = '/archives',
+  Timeline = '/timeline',
+  Music = '/music',
   Bangumi = '/bangumi',
 }
 
@@ -28,6 +30,8 @@ export const RESERVED_ROUTES = new Set([
   'post',
   'posts',
   'archives',
+  'timeline',
+  'music',
   'bangumi',
   '404',
   // Special files

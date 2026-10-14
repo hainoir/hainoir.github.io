@@ -17,6 +17,17 @@ export const uiStrings: UIStrings = {
   'nav.about': 'ブログについて',
   'nav.music': '音楽',
   'nav.weekly': '週刊',
+  'nav.timeline': 'タイムライン',
+  'timeline.title': '記事のタイムライン',
+  'timeline.description': '新しい記事から順に、これまでの記録を振り返ります。',
+  'experience.title': '職歴',
+  'experience.to': 'から',
+  'experience.present': '現在',
+  'music.heading': '私のプレイリスト',
+  'music.description': '好きな音楽を紹介します。記事を読むときは、背景音楽プレイヤーも利用できます。',
+  'music.hint': '再生ボタンで音楽を聴けます。再生できない曲は、元のプレイリストで確認してください。',
+  'music.openPlaylist': '音楽サービスで「{name}」を開く',
+  'music.empty': 'プレイリストを準備中です。',
 
   // ── 一般 ──────────────────────────────────────────────────
   'common.search': '検索',

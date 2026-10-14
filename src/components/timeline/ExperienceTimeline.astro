@@ -1,0 +1,218 @@
+---
+import { experiences } from '@constants/experiences';
+import { Icon } from 'astro-icon/components';
+import { getLocaleFromUrl, t } from '@/i18n';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+const locale = getLocaleFromUrl(Astro.url.pathname);
+---
+
+{
+  experiences.length > 0 && (
+    <ol class:list={['experience-timeline not-prose', { compact }]} role="list" aria-label={t(locale, 'experience.title')}>
+      {experiences.map((item) => (
+        <li class:list={['experience-item', { current: !item.endDate }]}>
+          <span class="experience-dot" aria-hidden="true"></span>
+          <span class="experience-line" aria-hidden="true"></span>
+          <div class="experience-content">
+            <p class="experience-period">
+              <time datetime={item.startDate}>{item.startDate.replace('-', '.')}</time>
+              <span aria-hidden="true"> — </span>
+              {item.endDate && <span class="sr-only">{t(locale, 'experience.to')}</span>}
+              {item.endDate ? (
+                <time datetime={item.endDate}>{item.endDate.replace('-', '.')}</time>
+              ) : (
+                <span>{t(locale, 'experience.present')}</span>
+              )}
+            </p>
+            <p class="experience-organization">
+              {item.logo ? (
+                <img src={item.logo} class="experience-logo" width="96" height="96" alt="" decoding="async" />
+              ) : (
+                <Icon name={item.icon || 'ri:building-4-line'} class="experience-icon" style={item.iconColor ? { color: item.iconColor } : undefined} aria-hidden="true" />
+              )}
+              <span>{item.organization}</span>
+            </p>
+            <p class="experience-role">{item.role}</p>
+            {!compact && item.description && <p class="experience-description">{item.description}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+<style>
+  /* Card treatment adapted from https://github.com/SmileSnow819/YukiBloom/blob/main/src/components/timeline/timeline.css */
+  .experience-timeline {
+    container-type: inline-size;
+    container-name: experience;
+    position: relative;
+    width: 100%;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  }
+
+  .experience-item {
+    position: relative;
+    margin: 0;
+    padding: 0 0 1.5rem 1.5rem;
+    border: 0;
+    border-radius: 0;
+  }
+  .experience-item:last-child { padding-bottom: 0; }
+  .experience-item::before, .experience-item::marker { content: none; }
+  .experience-item:hover { background: transparent; }
+  .experience-item:last-child .experience-line { display: none; }
+
+  .experience-dot {
+    position: absolute;
+    left: 0.125rem;
+    top: 50%;
+    translate: 0 -50%;
+    scale: 1;
+    width: 0.625rem;
+    height: 0.625rem;
+    background: var(--gradient-pink);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+    z-index: 2;
+    transition: scale 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  }
+  .experience-line {
+    position: absolute;
+    left: 0.4375rem;
+    top: 50%;
+    width: 1px;
+    height: 100%;
+    translate: -0.5px 0;
+    background: linear-gradient(180deg, var(--color-pink), var(--color-pink-a3));
+    opacity: 0.4;
+  }
+  .experience-content {
+    background: hsl(var(--card));
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid hsl(var(--border) / 0.5);
+    box-shadow: 0 1px 4px -2px var(--box-bg-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    translate: 0 0;
+    transition: translate 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .experience-period {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.25em;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.12), rgb(236 140 105 / 0.12));
+    color: var(--color-pink);
+    padding: 0.25rem 0.625rem;
+    border: 1px solid hsl(var(--primary) / 0.15);
+    border-radius: 1rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .experience-organization {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+  .experience-icon { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-pink); }
+  .experience-logo {
+    display: inline-block;
+    width: 1.3em;
+    height: 1.3em;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    object-fit: contain;
+  }
+  .experience-role {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .experience-description {
+    margin: 0.25rem 0 0;
+    padding-top: 0.5rem;
+    border-top: 1px dashed hsl(var(--foreground) / 0.06);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: hsl(var(--muted-foreground));
+    white-space: pre-line;
+  }
+  :global(.dark) .experience-content { backdrop-filter: blur(8px); border-color: hsl(var(--border) / 0.3); }
+  :global(.dark) .experience-dot { box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3); }
+  :global(.dark) .experience-line { opacity: 0.3; }
+  :global(.dark) .experience-period { border-color: hsl(var(--primary) / 0.25); }
+
+  @media (hover: hover) {
+    .experience-item:hover .experience-content {
+      translate: 0 -2px;
+      box-shadow: 0 6px 12px -4px var(--box-bg-shadow);
+      border-color: hsl(var(--primary) / 0.3);
+    }
+    .experience-item:hover .experience-dot { scale: 1.6; box-shadow: 0 0 0 4px hsl(var(--primary) / 0.3); }
+    :global(.dark) .experience-item:hover .experience-content { border-color: hsl(var(--primary) / 0.4); }
+  }
+
+  @container experience (min-width: 500px) {
+    .experience-item { padding-left: 2rem; padding-bottom: 1.25rem; }
+    .experience-dot { left: 0.0625rem; width: 0.75rem; height: 0.75rem; }
+    .experience-content { padding: 0.875rem 1.25rem; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .experience-period { font-size: 0.75rem; padding: 0.3125rem 0.75rem; flex: 0 0 12.5rem; justify-content: center; }
+    .experience-organization { font-size: 0.9375rem; flex: 1; min-width: 120px; }
+    .experience-role { font-size: 0.8125rem; flex-shrink: 0; text-align: right; }
+    .experience-description { width: 100%; font-size: 0.8125rem; margin-top: 0.5rem; padding-top: 0.625rem; }
+  }
+  @container experience (min-width: 700px) {
+    .experience-item { padding-left: 2.5rem; padding-bottom: 1rem; }
+    .experience-dot { left: 0; width: 0.875rem; height: 0.875rem; }
+    .experience-content { padding: 1rem 1.5rem; gap: 1.5rem; }
+    .experience-period { font-size: 0.8125rem; padding: 0.375rem 0.875rem; flex-basis: 13.25rem; }
+    .experience-organization { font-size: 1rem; flex: 0 1 auto; }
+    .experience-role { font-size: 0.875rem; margin-left: auto; }
+    .experience-description { font-size: 0.875rem; }
+  }
+  @container experience (min-width: 900px) {
+    .experience-content { padding: 1.125rem 1.75rem; gap: 2rem; }
+    .experience-organization { font-size: 1.0625rem; flex: 1; }
+    .experience-role { font-size: 0.9375rem; }
+  }
+  @media (max-width: 640px) {
+    .experience-timeline { padding: 0.25rem 0.5rem; }
+    .experience-item { padding-left: 1.25rem; padding-bottom: 1.25rem; }
+    .experience-dot { left: 0; width: 0.5rem; height: 0.5rem; }
+    .experience-line { left: 0.25rem; }
+    .experience-content { padding: 0.625rem 0.875rem; gap: 0.3125rem; }
+    .experience-period { font-size: 0.625rem; padding: 0.1875rem 0.5rem; }
+    .experience-organization { font-size: 0.8125rem; }
+    .experience-role, .experience-description { font-size: 0.6875rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .experience-dot, .experience-content { transition: none; }
+    .experience-item:hover .experience-dot { scale: 1; }
+    .experience-item:hover .experience-content { translate: 0 0; }
+  }
+</style>

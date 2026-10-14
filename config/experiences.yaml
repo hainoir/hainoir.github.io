@@ -1,0 +1,14 @@
+# 经历按开始时间自动倒序排列。日期使用 YYYY-MM，省略 endDate 表示至今。
+# description 可选；用于记录职责、成果或补充说明。
+# icon 可选，使用已安装的 Iconify 图标（如 ri:building-4-line）；iconColor 可填十六进制色值。
+# logo 可选，填写 public/img 下的本地品牌图片路径；配置后优先于 icon。
+experiences:
+  - startDate: "2026-07"
+    organization: 超星
+    role: 前端研发工程师
+    logo: /img/companies/chaoxing.png
+  - startDate: "2026-06"
+    endDate: "2026-07"
+    organization: 好未来
+    role: 硬件运维工程师
+    logo: /img/companies/tal.png

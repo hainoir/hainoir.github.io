@@ -1,0 +1,28 @@
+---
+import { bgmConfig } from '@constants/site-config';
+import PageLayout from '@layouts/PageLayout.astro';
+import { getLocaleFromUrl, t } from '@/i18n';
+
+const locale = getLocaleFromUrl(Astro.url.pathname);
+const frontmatter = {
+  title: t(locale, 'nav.music'),
+  description: t(locale, 'music.description'),
+  comments: false,
+};
+---
+
+<PageLayout frontmatter={frontmatter}>
+  <h2>{t(locale, 'music.heading')}</h2>
+  <p>{t(locale, 'music.description')}</p>
+  {bgmConfig.audio.length > 0 ? (
+    <>
+      <div data-audio-player data-src={JSON.stringify(bgmConfig.audio)} data-api={bgmConfig.metingApi}></div>
+      <p class="text-sm text-muted-foreground">{t(locale, 'music.hint')}</p>
+      <ul>
+        {bgmConfig.audio.map((group) => group.list.map((url) => (
+          <li><a href={url} target="_blank" rel="noopener noreferrer">{t(locale, 'music.openPlaylist', { name: group.title || t(locale, 'nav.music') })}</a></li>
+        )))}
+      </ul>
+    </>
+  ) : <p>{t(locale, 'music.empty')}</p>}
+</PageLayout>

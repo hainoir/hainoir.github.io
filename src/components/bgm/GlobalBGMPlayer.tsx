@@ -53,6 +53,7 @@ export default function GlobalBGMPlayer({ audioGroups, metingApi }: GlobalBGMPla
     resolvedRetryRef.current = retryKey;
 
     let cancelled = false;
+    let settled = false;
     setLoading(true);
     setError(null);
 
@@ -77,12 +78,16 @@ export default function GlobalBGMPlayer({ audioGroups, metingApi }: GlobalBGMPla
           setError(err instanceof Error ? err.message : 'Failed to load playlist');
           setLoading(false);
         }
+      } finally {
+        settled = true;
       }
     }
 
     resolve();
     return () => {
       cancelled = true;
+      // Reopening must retry a request cancelled while the panel was closing.
+      if (!settled) resolvedRetryRef.current = -1;
     };
   }, [panelOpen, audioGroups, retryKey, metingApi]);
 

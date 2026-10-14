@@ -45,6 +45,7 @@ categoryMap:
   前端: front-end
   算法: algorithm
   工具: tools
+  周刊: weekly
 featuredCategories:
   - link: front-end
     label: 前端
@@ -78,6 +79,15 @@ featuredCategories:
 #   links: 相关链接配置（可选）
 # -----------------------------------------------------------------------------
 featuredSeries:
+  - slug: weekly
+    categoryName: 周刊
+    label: 周刊
+    fullName: 周刊：每周学习、工作与生活复盘
+    description: 记录每周的学习收获、工作实践与生活片段，回看走过的路，也给下一周留一点方向。
+    cover: /img/cover/11.webp
+    icon: ri:newspaper-line
+    highlightOnHome: false
+    enabled: true
   - slug: frontend-notes
     categoryName: 前端
     label: 前端手记
@@ -234,6 +244,14 @@ navigation:
     nameKey: nav.home
     path: /
     icon: ri:home-heart-fill
+  - name: 周刊
+    nameKey: nav.weekly
+    path: /weekly
+    icon: ri:newspaper-line
+  - name: 时间线
+    nameKey: nav.timeline
+    path: /timeline
+    icon: ri:time-line
   - name: 专栏
     icon: ri:book-open-line
     children:
@@ -263,6 +281,10 @@ navigation:
     nameKey: nav.about
     path: /about
     icon: fa6-regular:circle-user
+  - name: 歌单
+    nameKey: nav.music
+    path: /music
+    icon: ri:music-2-line
 comment:
   provider: giscus
   giscus:
@@ -307,8 +329,12 @@ seo:
     # Christmas/Seasonal Features
     # =============================================================================
 bgm:
-  enabled: false
-  audio: []
+  enabled: true
+  metingApi: https://163.hyc.moe/
+  audio:
+    - title: 我的歌单
+      list:
+        - https://music.163.com/playlist?id=824962536
 
 christmas:
   enabled: false
