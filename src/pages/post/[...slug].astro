@@ -59,7 +59,7 @@ const hasMath = defaultContentConfig.enableMath !== false && postMath !== false;
 const finalDescription = getPostDescription(post, locale);
 
 // OGP image for BlogPosting schema (uses same fallback chain as Layout)
-const ogImage = getOgImageUrl(post?.data.cover, Astro.site);
+const ogImage = getOgImageUrl(post?.data.cover, Astro.site, getPostSlug(post));
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -206,7 +206,7 @@ if (post.data.description) {
         本文作者：{siteConfig.author ?? siteConfig.name} ·
         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="hover:text-primary underline">CC BY-NC-SA 4.0</a>
       </p>
-      <Comment />
+      <Comment term={`/post/${postSlug}`} />
     </div>
   </TwoColumnLayout>
 </Layout>

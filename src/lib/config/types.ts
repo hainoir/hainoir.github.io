@@ -69,6 +69,8 @@ export interface FeaturedSeriesItem {
   icon?: string;
   /** Whether to highlight latest post on home page */
   highlightOnHome?: boolean;
+  /** Stable article links in the recommended reading order. Unlisted posts follow. */
+  readingOrder?: string[];
   /** Related links */
   links?: FeaturedSeriesLinks;
 }

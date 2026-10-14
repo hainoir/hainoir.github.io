@@ -1,5 +1,9 @@
 ---
 import Giscus from './Giscus';
+interface Props {
+  term?: string;
+}
+const { term } = Astro.props;
 ---
 
-<Giscus client:only="react" />
+<Giscus term={term} client:visible={{ rootMargin: '200px' }} />

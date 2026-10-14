@@ -1,0 +1,75 @@
+{
+  "description": "标题与目录层级的已确认编辑；原始迁移标题及正文校验值保留在 migration-manifest.json。",
+  "posts": [
+    {
+      "file": "Fronted/JavaScript 编码原则.md",
+      "title": "JavaScript 编码原则：职责分离、组件封装与过程抽象",
+      "bodySha256": "80f82f8ff1ee15b3c9518602fa09a4e5da7506a988f1063d4ffdd43d15741f9d"
+    },
+    {
+      "file": "Fronted/React.md",
+      "title": "React：useEffect 与自定义 Hook",
+      "bodySha256": "1994a253cb397ab1b216110934ea029782c1632c17d7b0dc5d6118d7efc5f285"
+    },
+    {
+      "file": "Fronted/深入浅出TypeScript.md",
+      "title": "深入浅出 TypeScript：类型系统、接口与泛型",
+      "bodySha256": "7860c4f99185e4f9eea3edede3f020e14094b7ec38c37deada8702a61b0ff6b6"
+    },
+    {
+      "file": "algorithms/1.前缀和与差分.md",
+      "title": "前缀和与差分：一维与二维区间操作",
+      "bodySha256": "3f9649dd02a80f97aef7200f138e02d8c66d7bddd622d26afb40d9bc8ec03a99"
+    },
+    {
+      "file": "algorithms/2.位运算双指针排序二分.md",
+      "title": "位运算、排序、双指针与二分：C++ 基础模板",
+      "bodySha256": "96b71111befa74436039fb26b435f47a621ad45551c09a6089c89149d7804fae"
+    },
+    {
+      "file": "algorithms/3.栈，优先队列，map，set，bitset.md",
+      "title": "C++ 常用容器：栈、优先队列、map、set 与 bitset",
+      "bodySha256": "fc474a934dc1b03c2895db44f61082fa7cb285394b70847a2b4ae4e03c240ef3"
+    },
+    {
+      "file": "algorithms/4.单调栈，单调队列.md",
+      "title": "单调栈与单调队列：相邻元素与滑动窗口",
+      "bodySha256": "c0970ec2b27bf0cba92752c92c261663a1c73e123ef9978303c40ea4a2ce5432"
+    },
+    {
+      "file": "algorithms/5.树状数组和离散化.md",
+      "title": "离散化与树状数组：下标映射、更新与查询",
+      "bodySha256": "5de31a2b9187824a90f35430336fa483bb6e1d31c1dfea49aeb73a841924bad3"
+    },
+    {
+      "file": "algorithms/6.图的存储方式，DFS，BFS.md",
+      "title": "图的存储与遍历：DFS、BFS 与回溯",
+      "bodySha256": "4db20b3cd45a0b47937c953315cbc796fc61680979dca805fe0bbb7b0b3ca1f2"
+    },
+    {
+      "file": "algorithms/C++中各类函数的用法.md",
+      "title": "C++ 常用方法速查：vector、reverse 与 memset",
+      "bodySha256": "f0ff0479e76f87f985bef0a917dc5fc4d8acdf64a053e5d71a770ca9507cf019"
+    },
+    {
+      "file": "algorithms/Java字符串方法.md",
+      "title": "Java 字符串方法速查",
+      "bodySha256": "ef0a1a895d818dfe1570a2850ae8abe502b5218275b95d1bae3c5e437c8c6936"
+    },
+    {
+      "file": "algorithms/java算法.md",
+      "title": "Java 数论基础：最大公约数、最小公倍数与素数",
+      "bodySha256": "a150333ab247f08da978d6e3ff916068015965c980a08d14e3c6cfe12ef2c5ce"
+    },
+    {
+      "file": "algorithms/常见的算法.md",
+      "title": "C++ 刷题常用小模板",
+      "bodySha256": "66f4fed0fc69a0ba078e554d443d32c58d0b8a67122834010e16eaa7ed306ebd"
+    },
+    {
+      "file": "小技巧/摆脱鼠标编程.md",
+      "title": "摆脱鼠标编程：编辑、运行与 Windows 快捷键",
+      "bodySha256": "ff9ddbb4a0fba5228cba5849a8255f8758533b7fe778890e5d951d8c4a5cda50"
+    }
+  ]
+}

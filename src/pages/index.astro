@@ -22,7 +22,7 @@ const { highlightedPosts, stickyPosts: normalStickyPosts, regularPosts } = await
 // 将高亮系列文章放在置顶列表开头（转换为卡片数据）
 const stickyPosts = toPostCardDataList([...highlightedPosts, ...normalStickyPosts], locale);
 
-// 首页显示前N篇普通文章（不含系列文章）
+// 首页显示前N篇普通文章（包含专栏文章，排除已置顶或高亮的文章）
 const { pageSize } = PAGINATION;
 const regularPostsSlice = regularPosts.slice(0, pageSize);
 const posts = toPostCardDataList(regularPostsSlice, locale);

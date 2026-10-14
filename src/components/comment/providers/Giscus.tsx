@@ -16,7 +16,7 @@ function getTheme(): GiscusTheme {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-export default function Giscus() {
+export default function Giscus({ term }: { term?: string }) {
   const config = commentConfig.giscus;
   const { locale } = useTranslation();
   const [theme, setTheme] = useState<GiscusTheme>('light');
@@ -44,7 +44,8 @@ export default function Giscus() {
     return () => observer.disconnect();
   }, []);
 
-  if (!mounted || !config?.repo) return null;
+  if (!config?.repo) return null;
+  if (!mounted) return <div className="min-h-32 text-muted-foreground text-sm">评论加载中…</div>;
 
   const [owner, repo] = config.repo.split('/');
   if (!owner || !repo) {
@@ -54,13 +55,14 @@ export default function Giscus() {
 
   return (
     <GiscusComponent
+      key={term ?? config.term}
       host={config?.host}
       repo={config.repo}
       repoId={config.repoId}
       category={config?.category}
       categoryId={config?.categoryId}
       mapping={config?.mapping ?? 'pathname'}
-      term={config?.term}
+      term={term ?? config?.term}
       strict={config?.strict}
       reactionsEnabled={config?.reactionsEnabled}
       emitMetadata={config?.emitMetadata}

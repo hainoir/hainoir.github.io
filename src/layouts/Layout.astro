@@ -12,6 +12,7 @@ interface Props {
 }
 
 import { ClientRouter } from 'astro:transitions';
+import Umami from '@components/analytics/Umami.astro';
 import AnnouncementProvider from '@components/announcement/AnnouncementProvider.astro';
 import GlobalBGMPlayer from '@components/bgm/GlobalBGMPlayer';
 import ChristmasEffects from '@components/christmas/ChristmasEffects.astro';
@@ -26,6 +27,7 @@ import ImageLightbox from '@components/markdown/ImageLightbox';
 import { Toaster } from '@components/ui/sonner';
 import { bgmConfig, christmasConfig, seoConfig, siteConfig } from '@constants/site-config';
 import { getOgImageUrl } from '@lib/seo/og-image';
+import { getPostSlug } from '@lib/content';
 import LoadingIndicator from 'astro-loading-indicator/component';
 import { SEO } from 'astro-seo';
 import { Tooltips } from 'astro-tooltips';
@@ -61,8 +63,7 @@ const htmlLang = getHtmlLang(locale);
 // Detect if current page is a post page for mobile header (locale-prefix safe)
 const isPostPage = stripLocaleFromPath(Astro.url.pathname).startsWith('/post/');
 
-// OGP image: use post cover if available, otherwise use default from config, fallback to avatar
-const ogImage = getOgImageUrl(post?.data.cover, Astro.site);
+const ogImage = getOgImageUrl(post?.data.cover, Astro.site, post && getPostSlug(post));
 
 // Pre-compute i18n URLs for <head> links
 const rssHref = new URL(localizedPath('/rss.xml', locale), Astro.site).href;
@@ -102,6 +103,7 @@ const canonicalHref = canonicalOverride ?? Astro.url.href;
     )}
 
     <ClientRouter />
+    <Umami />
     <LoadingIndicator color="#e9536a" />
     <Tooltips />
     <!-- SEO 元数据由 astro-seo 管理 -->
@@ -112,7 +114,7 @@ const canonicalHref = canonicalOverride ?? Astro.url.href;
       openGraph={{
         basic: {
           title: title,
-          type: 'website',
+          type: post ? 'article' : 'website',
           image: ogImage || '',
           url: Astro.url.href,
         },
@@ -128,7 +130,16 @@ const canonicalHref = canonicalOverride ?? Astro.url.href;
         ...(ogImage && { image: ogImage }),
       }}
       extend={{
-        meta: [{ name: 'author', content: siteConfig.author || '' }],
+        meta: [
+          { name: 'author', content: siteConfig.author || '' },
+          ...(ogImage ? [
+            { property: 'og:image:width', content: '1200' },
+            { property: 'og:image:height', content: '630' },
+            { property: 'og:image:type', content: 'image/png' },
+            { property: 'og:image:alt', content: post ? `${post.data.title} · ${siteConfig.title}` : siteConfig.title },
+            { name: 'twitter:image:alt', content: post ? `${post.data.title} · ${siteConfig.title}` : siteConfig.title },
+          ] : []),
+        ],
       }}
     />
     <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssHref} />

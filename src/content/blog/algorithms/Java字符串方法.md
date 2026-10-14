@@ -1,6 +1,6 @@
 ---
-title: Java字符串方法
-description: Java字符串方法
+title: Java 字符串方法速查
+description: 通过简短示例整理 Java 字符串的比较、长度、字符访问、位置查找、判空、大小写转换、trim 与替换方法，记录常见返回值及调用形式。
 tags:
   - Java
   - 算法
@@ -10,7 +10,7 @@ link: b324aa57
 categories:
   - 算法
 ---
-1.equals
+## equals：比较字符串
 
 eg：
 
@@ -26,13 +26,13 @@ equal可以比较两个字符串是否相同，得到的结果是布尔值，即
 
 
 
-2.length
+## length：获取长度
 
    得到字符串长度
 
 
 
-3.charAt
+## charAt：访问字符
 
 eg:
 
@@ -46,7 +46,7 @@ char res = name.charAt(0);
 
 
 
-4.indexOf
+## indexOf：查找位置
 
 eg:
 
@@ -60,7 +60,7 @@ int res = name.indexOf(h);
 
 
 
-5.isEmpty
+## isEmpty：判断空字符串
 
 eg: 
 
@@ -74,7 +74,7 @@ boolean res = name.isEmpty();
 
 
 
-6.toUpperCase  
+## 大小写转换
 
 eg：
 
@@ -94,13 +94,13 @@ String res = name.toUpperCase();
 
 
 
-7.trim
+## trim
 
 将删除字符串中的所有空格
 
 
 
-8.replace
+## replace：替换字符
 
 eg：
 

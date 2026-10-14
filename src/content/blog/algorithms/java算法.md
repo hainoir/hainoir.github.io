@@ -1,6 +1,6 @@
 ---
-title: java算法
-description: java算法
+title: Java 数论基础：最大公约数、最小公倍数与素数
+description: 汇总 Java 中最大公约数、最小公倍数、素数判断与素数筛的基础模板，对照递归求 gcd、试除法判断素数和批量预处理素数的实现。
 tags:
   - Java
   - 算法
@@ -10,7 +10,7 @@ link: 2f8a531c
 categories:
   - 算法
 ---
-1.最大公约数gcd
+## 最大公约数 gcd
 
 ```java
 public static int gcd(int x,int y)
@@ -19,7 +19,7 @@ public static int gcd(int x,int y)
 }
 ```
 
-2.最小公倍数lcm
+## 最小公倍数 lcm
 
 ```java
 public static int lcm(int a, int b) 
@@ -28,7 +28,7 @@ public static int lcm(int a, int b)
 }
 ```
 
-3.素数
+## 判断素数
 
 ```java
 public static boolean isPrime2(int n) {
@@ -45,7 +45,7 @@ public static boolean isPrime2(int n) {
 }
 ```
 
-4.素数筛（预处理素数）
+## 素数筛：批量预处理
 
 ```java
 for(int i = 2;i < v.length;++i) 

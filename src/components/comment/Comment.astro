@@ -10,6 +10,10 @@ import { getLocaleFromUrl, t } from '@/i18n';
 import { cn } from '@/lib/utils';
 import { christmasEnabled } from '@/store/christmas';
 
+interface Props {
+  term?: string;
+}
+const term = Astro.props.term ?? (Astro.url.pathname.replace(/\/$/, '') || '/');
 const provider = commentConfig.provider ?? 'none';
 const locale = getLocaleFromUrl(Astro.url.pathname);
 let Provider = null;
@@ -29,7 +33,10 @@ if (provider === 'remark42') {
   provider !== 'none' && Provider && (
     <div class={cn('comments w-full', { 'z-5': christmasEnabled.get() })}>
       <p class="text-muted-foreground mb-4 text-center text-sm">{t(locale, 'comment.prompt')}</p>
-      <Provider />
+      <Provider {...(provider === 'giscus' ? { term } : {})} />
+      <noscript>
+        {provider === 'giscus' && <a href={`https://github.com/${commentConfig.giscus?.repo}/discussions`} class="text-primary underline">前往 GitHub Discussions 参与讨论</a>}
+      </noscript>
     </div>
   )
 }

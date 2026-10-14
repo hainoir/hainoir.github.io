@@ -1,0 +1,69 @@
+---
+import { analyticsConfig, siteConfig } from '@constants/site-config';
+
+const config = analyticsConfig.umami;
+const enabled = import.meta.env.PROD && config?.enabled && config.id;
+const domain = new URL(siteConfig.site).hostname;
+---
+
+{enabled && <meta name="umami-config" content={config.endpoint} data-website-id={config.id} data-domain={domain} />}
+
+<script>
+  interface UmamiTracker {
+    track: (properties: { url: string; title: string; referrer: string }) => Promise<unknown>;
+  }
+  declare global {
+    interface Window {
+      umami?: UmamiTracker;
+    }
+  }
+
+  let trackerReady: Promise<UmamiTracker> | undefined;
+  let previousUrl = '';
+  let visit = 0;
+
+  function loadTracker(config: HTMLMetaElement): Promise<UmamiTracker> {
+    if (window.umami) return Promise.resolve(window.umami);
+    if (trackerReady) return trackerReady;
+    trackerReady = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.id = 'umami-tracker';
+      script.src = config.content;
+      script.defer = true;
+      script.dataset.websiteId = config.dataset.websiteId;
+      script.dataset.domains = config.dataset.domain;
+      // Astro's page-load event handles both first load and client-side navigation.
+      script.dataset.autoTrack = 'false';
+      script.dataset.doNotTrack = 'true';
+      script.dataset.excludeSearch = 'true';
+      script.dataset.excludeHash = 'true';
+      script.onload = () => {
+        if (window.umami) resolve(window.umami);
+        else reject(new Error('Umami tracker did not initialize'));
+      };
+      script.onerror = () => reject(new Error('Umami tracker failed to load'));
+      document.head.append(script);
+    });
+    return trackerReady;
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const config = document.querySelector<HTMLMetaElement>('meta[name="umami-config"]');
+    // Preview servers and localhost must not send production page views.
+    if (!config || location.hostname !== config.dataset.domain) return;
+    const url = `${location.origin}${location.pathname}`;
+    if (url === previousUrl) return;
+    const currentVisit = ++visit;
+    const referrer = previousUrl || document.referrer;
+    const title = document.title;
+    previousUrl = url;
+    void loadTracker(config).then((tracker) => {
+      // A slow tracker must not report a page the visitor has already left.
+      if (currentVisit === visit) return tracker.track({ url, title, referrer });
+    }).catch(() => {
+      document.getElementById('umami-tracker')?.remove();
+      trackerReady = undefined;
+      previousUrl = '';
+    });
+  });
+</script>

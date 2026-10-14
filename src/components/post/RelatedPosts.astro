@@ -1,0 +1,36 @@
+---
+import { getPostDescription, getPostLastCategory, getPostSlug, translateCategoryName } from '@lib/content';
+import { rankRelatedPosts } from '@lib/content/recommendations';
+import { encodeSlug } from '@lib/route';
+import type { BlogPost } from 'types/blog';
+import { localizedPath, t } from '@/i18n';
+
+interface Props {
+  post: BlogPost;
+  allPosts: BlogPost[];
+  locale: string;
+}
+const { post, allPosts, locale } = Astro.props;
+const related = rankRelatedPosts(post, allPosts);
+---
+
+{related.length > 0 && (
+  <section class="px-10 md:px-6" data-related-posts>
+    <h2 class="text-foreground/80 mb-4 text-2xl font-semibold">{t(locale, 'post.relatedPosts')}</h2>
+    <ul role="list" class="tablet:grid-cols-1 grid grid-cols-2 gap-3">
+      {related.map((item) => {
+        const category = getPostLastCategory(item).name;
+        return (
+          <li class="min-w-0">
+            <a href={localizedPath(`/post/${encodeSlug(getPostSlug(item))}`, locale)}
+              class="group border-border bg-gradient-start hover:border-primary/40 focus-visible:outline-primary flex h-full flex-col gap-2 rounded-xl border p-5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4">
+              {category && <span class="text-muted-foreground text-xs">{translateCategoryName(category, locale)}</span>}
+              <h3 class="group-hover:text-primary text-base leading-relaxed font-semibold">{item.data.title}</h3>
+              <p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed">{getPostDescription(item, locale)}</p>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}

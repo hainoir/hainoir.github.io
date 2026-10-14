@@ -140,6 +140,15 @@ function normalizeFeaturedSeries(config: unknown): FeaturedSeriesItem[] {
     slugSet.add(normalizedSlug);
     item.slug = normalizedSlug;
 
+    if (
+      item.readingOrder !== undefined &&
+      (!Array.isArray(item.readingOrder) ||
+        item.readingOrder.some((id) => typeof id !== 'string' || !id.trim()) ||
+        new Set(item.readingOrder).size !== item.readingOrder.length)
+    ) {
+      throw new Error(`Series "${item.slug}" readingOrder must contain unique, non-empty article links.`);
+    }
+
     // Validate categoryName exists in categoryMap
     if (yamlConfig.categoryMap && !yamlConfig.categoryMap[item.categoryName]) {
       console.warn(

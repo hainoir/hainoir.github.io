@@ -20,7 +20,7 @@ site:
   showLogo: false # 使用站点名称显示 Logo
   author: hainoir # 作者名称 - 请修改为你的名字
   url: https://hainoir.github.io/ # 站点 URL 用于 RSS 和 SEO
-  defaultOgImage: /img/hainoir-avatar.png # 默认 Open Graph 图片
+  defaultOgImage: /og/site.png # 构建时自动生成的站点分享卡片
   startYear: 2025 # 建站年份
   timezone: Asia/Hong_Kong # 时区配置 (IANA 格式)，用于日期显示和处理
   keywords:
@@ -74,9 +74,47 @@ featuredCategories:
 #   enabled: 是否启用此系列，设为 false 可关闭（可选，默认 true）
 #   icon: 导航图标，Iconify 格式如 'ri:newspaper-line'（可选）
 #   highlightOnHome: 是否在首页高亮显示最新文章（可选，默认 true，显式设为 false 可禁用）
+#   readingOrder: 推荐阅读顺序，填写文章 frontmatter 的 link；未列出的新文章会追加在末尾
 #   links: 相关链接配置（可选）
 # -----------------------------------------------------------------------------
-featuredSeries: []
+featuredSeries:
+  - slug: frontend-notes
+    categoryName: 前端
+    label: 前端手记
+    fullName: 前端手记：语言与组件
+    description: >-
+      从 JavaScript 的职责分离与组件封装，到 TypeScript 的类型系统与泛型，
+      再到 React 的 Effect、自定义 Hook，按语言基础到组件逻辑的顺序复习。
+    cover: /img/cover/1.webp
+    icon: ri:code-s-slash-line
+    highlightOnHome: false
+    enabled: true
+    readingOrder:
+      - bea3b2c9
+      - e86ee304
+      - d8a440d1
+  - slug: algorithm-notes
+    categoryName: 算法
+    label: 算法手记
+    fullName: 算法手记：思路与模板
+    description: >-
+      记录前缀和、差分、二分、常用容器、树状数组与图遍历的思路和代码模板，
+      配合 C++ 与 Java 基础方法速查，在理解问题之后再回看实现。
+    cover: /img/cover/4.webp
+    icon: ri:braces-line
+    highlightOnHome: false
+    enabled: true
+    readingOrder:
+      - 5513a8e3
+      - 32c27e41
+      - ca70cb17
+      - aa3f72d6
+      - f569f5a2
+      - 62da137b
+      - a72304e1
+      - b74716b
+      - b324aa57
+      - 2f8a531c
 social:
   github:
     url: https://github.com/hainoir
@@ -196,6 +234,15 @@ navigation:
     nameKey: nav.home
     path: /
     icon: ri:home-heart-fill
+  - name: 专栏
+    icon: ri:book-open-line
+    children:
+      - name: 前端手记
+        path: /frontend-notes
+        icon: ri:code-s-slash-line
+      - name: 算法手记
+        path: /algorithm-notes
+        icon: ri:braces-line
   - name: 文章
     nameKey: nav.posts
     icon: ri:quill-pen-ai-fill
@@ -217,12 +264,24 @@ navigation:
     path: /about
     icon: fa6-regular:circle-user
 comment:
-  provider: none
+  provider: giscus
+  giscus:
+    repo: hainoir/hainoir.github.io
+    repoId: R_kgDOPYANAA
+    category: Announcements
+    categoryId: DIC_kwDOPYANAM4DIZKF
+    mapping: specific # 用稳定文章 link 关联评论，修改标题不会丢失评论
+    strict: "1"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: top
+    lang: zh-CN
+    loading: lazy
 analytics:
   umami:
-    enabled: false
-    id: ""
-    endpoint: ""
+    enabled: true
+    id: 537dadcf-c188-40d5-81fb-64c05d04403a
+    endpoint: https://cloud.umami.is/script.js
 
 # =============================================================================
 # SEO Configuration

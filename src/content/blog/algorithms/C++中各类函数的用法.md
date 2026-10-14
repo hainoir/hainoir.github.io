@@ -1,6 +1,6 @@
 ---
-title: C++中各类函数的用法
-description: C++中各类函数的用法
+title: C++ 常用方法速查：vector、reverse 与 memset
+description: 一份 C++ 刷题方法速查，记录 vector 的追加、删除与迭代器用法，以及 bitset、reverse、memset 和 abs 的基本写法，便于回看常用操作。
 tags:
   - C++
   - 算法
@@ -10,11 +10,11 @@ link: 5513a8e3
 categories:
   - 算法
 ---
-# C++中各类函数和方法的用法
+C++ 中常用函数和方法的基本写法。
 
 
 
-### 1.bitset
+## bitset
 
 ```c++
 bitset<n>(x) //将x转换为n进制数
@@ -22,7 +22,7 @@ bitset<n>(x) //将x转换为n进制数
 
 
 
-### 2.vector
+## vector
 
 ```c++
 vector<int> a;             //可以自动维护数组长度，适合用在增删查改数组上
@@ -37,7 +37,7 @@ vector中的方法：
 
 
 
-### 3.reverse
+## reverse
 
 ```c++
 reverse(x,y); 					//翻转数组中范围为x——y的元素
@@ -45,7 +45,7 @@ reverse(x,y); 					//翻转数组中范围为x——y的元素
 
 
 
-### 4.memset
+## memset
 
 ```c++
 memset(c, 0 ,sizeof(int) * (n + 1) ); //将c中在n+1之前的所有元素更改为0
@@ -53,10 +53,10 @@ memset(c, 0 ,sizeof(int) * (n + 1) ); //将c中在n+1之前的所有元素更改
 
 
 
-### 5.abs()
+## abs
 
 求绝对值
 
 
 
-### 6.sort()
+## sort

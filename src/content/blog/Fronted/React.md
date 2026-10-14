@@ -1,6 +1,6 @@
 ---
-title: React
-description: React
+title: React：useEffect 与自定义 Hook
+description: 梳理 useEffect 的执行时机与依赖数组，说明自定义 Hook 如何复用组件逻辑，并用 useDebounce 示例串起状态、定时器和清理函数的配合。
 tags:
   - React
   - 前端
@@ -10,15 +10,15 @@ link: d8a440d1
 categories:
   - 前端
 ---
-#### 一.Effect
+## useEffect：副作用与执行时机
 
-##### 1. 概念
+### Effect 的概念
 
 在 React 中，Effect 指的是在组件渲染过程之外发生的一切事情。也就是说，任何 React 不直接处理的与渲染 UI 相关的操作。
 
 > 常见的例子包括获取数据、更新浏览器标签页的标题、读取或写入浏览器的本地存储、获取用户的位置等。这些操作与外部世界进行交互，被称为副作用。
 
-##### 2.使用方法
+### useEffect 的基本用法
 
 首先需要导入
 
@@ -38,7 +38,7 @@ useEffect(()=>{
 
 
 
-1. `dependencies`
+### 依赖数组 dependencies
 
 注意` dependencies `可以是一个包含"响应式值"（state, props, functions, variables, and so on）的数组，也可以是一个空数组，或者完全省略。下面是这些选项如何控制` useEffect `的行为：
 
@@ -97,9 +97,9 @@ export default Counter;
 
 
 
-#### 二.创建自定义Hook
+## 创建自定义 Hook
 
-1. ##### 创建的理由
+### 为什么创建自定义 Hook
 
 React 提供了许多内置的钩子，使你能够在项目中实现不同的功能。这些包括 `useState` ， `useEffect` ， `useContext` ，等等。
 
@@ -110,7 +110,7 @@ React 提供了许多内置的钩子，使你能够在项目中实现不同的�
 
 
 
-2. ##### 创建的好处
+### 自定义 Hook 的好处
 
 - 将任何使用它们的组件中的逻辑提取出来
 
@@ -122,7 +122,7 @@ React 提供了许多内置的钩子，使你能够在项目中实现不同的�
 
 
 
-3. ##### 使用方法
+### useDebounce 示例
 
 接下来，创建一个 `useDebounce` 函数，它接受 `value` 和 `delay` 作为参数。 `value` 是你想要等待的资源， `delay` 是你希望等待的时间段。由于你希望等待一段时间， `setTimeout` 和 `clearTimeout` 函数会很有用：
 

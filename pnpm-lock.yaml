@@ -252,6 +252,12 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@types/fontkit':
+        specifier: ^2.0.9
+        version: 2.0.9
+      fontkit:
+        specifier: ^2.0.4
+        version: 2.0.4
       '@astrojs/check':
         specifier: ^0.9.6
         version: 0.9.6(prettier-plugin-astro@0.14.1)(prettier@3.7.4)(typescript@5.9.3)
@@ -362,6 +368,10 @@ importers:
         version: 2.8.2
 
 packages:
+
+  '@types/fontkit@2.0.9':
+    resolution: {integrity: sha512-qNYerFky3muCmZPq+R+B3cUDRA5OONw/oh6aGGFxx2LOBz6yu8eamKusrhkHnC6rc2fm76+G9z9QoWSB2SaQaw==}
+
 
   '@acemir/cssom@0.9.26':
     resolution:
@@ -15715,6 +15725,11 @@ packages:
       }
 
 snapshots:
+
+  '@types/fontkit@2.0.9':
+    dependencies:
+      '@types/node': 24.10.1
+
 
   '@acemir/cssom@0.9.26': {}
 
