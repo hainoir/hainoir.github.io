@@ -4,9 +4,11 @@
 # logo 可选，填写 public/img 下的本地品牌图片路径；配置后优先于 icon。
 experiences:
   - startDate: "2026-07"
-    organization: 超星
+    organization: 超星智慧教育科技有限公司
     role: 前端研发工程师
     logo: /img/companies/chaoxing.png
+    description: >-
+      独立负责许昌职业技术学院专业群建设管理系统前端开发，完成 Mock / HTTP 数据源隔离、D3.js 多层关系图谱与 AI 异步任务接入；同时参与低代码表单与审批平台迭代，完成管理页国际化、设计验收 Skill 及存量业务兼容性治理。
   - startDate: "2026-06"
     endDate: "2026-07"
     organization: 好未来

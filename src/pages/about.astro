@@ -4,15 +4,25 @@ import PageLayout from '../layouts/PageLayout.astro';
 const frontmatter = {
   title: '关于',
   coverTitle: '关于我',
-  description: '记录前端实践、算法推演和那些值得反复理解的问题。',
+  description: '胡琦（hainoir）的个人介绍：前端工程、项目实践与 AI 协同研发。',
 };
 ---
 
 <PageLayout frontmatter={frontmatter}>
-  <h2>你好，我是 hainoir</h2>
-  <p>你好，我是 hainoir。</p>
-  <p>我关注前端开发与算法，也把学习过程中的推演、实践和踩坑整理在这里。这些文章不是追求完整答案的教程仓库，而是可以继续修订的个人技术笔记。</p>
-  <p>当前主要记录 React、TypeScript、JavaScript、C++ 与算法基础。</p>
-  <h2>工作经历</h2>
+  <h2>你好，我是胡琦，也叫 hainoir</h2>
+  <p>天津商业大学计算机科学与技术专业本科在读，2027 届。目前专注于现代 Web 应用开发，拥有 React / Next.js 与 Vue 3 双技术栈实践。</p>
+  <p>我关注的不只是页面实现，也包括复杂业务状态、前后端契约、数据一致性、自动化测试和性能优化。实习期间独立负责过职业院校专业群建设系统的前端开发，也持续参与大型低代码表单与审批平台的需求迭代和存量治理。</p>
+  <p>我长期使用 AI 辅助需求分析、代码实现和交付审查，并通过类型检查、测试、Diff 审查和真实页面验收控制结果。相比“让 AI 写更多代码”，我更关心如何让它在真实研发流程中稳定、可验证地工作。</p>
+
+  <h2>代表项目</h2>
+  <h3><a href="https://github.com/hainoir/rag" target="_blank" rel="noopener noreferrer">校园智能问答 RAG 平台</a></h3>
+  <p>基于 Next.js、TypeScript、PostgreSQL 与 pgvector 构建的可解释 RAG MVP，支持关键词和向量混合检索、来源追溯、拒答门控与离线检索评测。</p>
+  <h3><a href="https://github.com/hainoir/club-platform" target="_blank" rel="noopener noreferrer">高校学生社团管理平台</a></h3>
+  <p>围绕登录认证、值班签到、请假代班和钥匙交接等真实业务流程构建，重点处理服务端 / 客户端边界、登录态同步和复杂业务拆分。</p>
+
+  <h2>这里记录什么</h2>
+  <p>主要记录 React、Vue、TypeScript、JavaScript、算法与 AI 工程实践，也保留项目开发中的问题定位、方案取舍和踩坑复盘。文章不是一次写完的标准答案，而是可以继续修订的个人技术笔记。</p>
+
+  <h2>实习与工作经历</h2>
   <ExperienceTimeline />
 </PageLayout>

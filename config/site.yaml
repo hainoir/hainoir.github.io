@@ -13,12 +13,12 @@
 site:
   title: hainoir 的博客 # 网站名称
   alternate: hainoir # 网站英文名称 用于页脚、Logo、@ handle 等
-  subtitle: 前端、算法与长期主义的技术笔记 # 网站副标题
-  name: hainoir # 作者名称 - 请修改为你的名字
-  description: 记录前端实践、算法推演和那些值得反复理解的问题。 # 网站描述
+  subtitle: 前端工程、AI 协作与长期主义的技术笔记 # 网站副标题
+  name: 胡琦 / hainoir # 作者名称 - 请修改为你的名字
+  description: 记录 React、Vue、TypeScript、算法与 AI 工程实践，以及值得复盘的项目问题。 # 网站描述
   avatar: /img/hainoir-avatar.png # 网站头像
   showLogo: false # 使用站点名称显示 Logo
-  author: hainoir # 作者名称 - 请修改为你的名字
+  author: 胡琦 / hainoir # 作者名称 - 请修改为你的名字
   url: https://hainoir.github.io/ # 站点 URL 用于 RSS 和 SEO
   defaultOgImage: /og/site.png # 构建时自动生成的站点分享卡片
   startYear: 2025 # 建站年份
@@ -28,8 +28,11 @@ site:
     - 前端
     - 算法
     - React
+    - Vue
     - TypeScript
     - JavaScript
+    - AI 工程
+    - RAG
 i18n:
   defaultLocale: zh
   locales:
