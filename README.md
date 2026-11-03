@@ -47,6 +47,8 @@ draft: false
 - 关于页：`src/pages/about.astro`；工作经历配置：`config/experiences.yaml`，日期使用 `YYYY-MM`，省略结束时间表示至今。关于页和侧栏共用这份配置，时间轴根据容器宽度切换横向／纵向卡片布局。可选 `logo`（本地品牌图片）、`icon`（已安装的 Iconify 图标）和 `iconColor`（十六进制颜色），优先使用 `logo`。当前两家公司采用官网标识，来源记录在 `public/img/companies/README.md`。
 - 文章时间线：`/timeline`，自动按发布日期倒序展示已发布文章。
 - 静态图片：`public/img/`。
+- 首页横幅：`public/img/site_header_1920.webp` 和 `site_header_800.webp`，由 `src/components/ui/cover/Cover.astro` 引用。更换时建议使用 2560 × 1440（16:9）的清晰原图，最低 1920 × 1080；导出 WebP，桌面版约 200–500 KB、移动版宽 800–1200 px。横幅全宽、高度为视口的 60%（最高 800 px），采用居中裁剪，主体尽量居中并给标题留白。更换后同步更新组件中的真实图片尺寸、`srcset` 宽度描述，并运行 `pnpm generate:lqips` 更新预览。
+- 对外作者信息统一使用昵称 `hainoir`；更新作者配置、关于页、图片和文档时避免带入实名。
 - 现有分类：前端、算法、工具。
 - 专栏：`/frontend-notes/`（前端手记）和 `/algorithm-notes/`（算法手记），基于现有分类自动收录文章；顶部和侧栏的“专栏”菜单提供入口。
 - 首页置顶：《深入浅出 TypeScript：类型系统、接口与泛型》和《前缀和与差分：一维与二维区间操作》。文章 frontmatter 设置 `sticky: true` 即可置顶，删除该字段或改为 `false` 即可取消。
